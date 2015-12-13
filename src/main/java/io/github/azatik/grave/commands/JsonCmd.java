@@ -63,7 +63,7 @@ public class JsonCmd implements CommandExecutor {
                 ItemStackSnapshot itemSnapshot = player.getItemInHand().get().createSnapshot();
                 DataContainer dataContainer = itemSnapshot.toContainer();
                 
-                Text msg1ContainerName = Texts.of(TextColors.YELLOW, "Second container: " + dataContainer.toString());
+                Text msg1ContainerName = Texts.of(TextColors.YELLOW, "First container: " + dataContainer.toString());
                 player.sendMessage(msg1ContainerName);
                 
                 StringWriter writer = new StringWriter();
