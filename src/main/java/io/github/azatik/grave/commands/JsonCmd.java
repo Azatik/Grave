@@ -25,10 +25,11 @@
 package io.github.azatik.grave.commands;
 
 import io.github.azatik.grave.Grave;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +43,7 @@ import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.translator.ConfigurateTranslator;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
@@ -56,9 +58,13 @@ public class JsonCmd implements CommandExecutor {
         Game game = Grave.getInstance().getGame();
         if (src instanceof Player) {
             try {
+                //Writer
                 Player player = (Player) src;
                 ItemStackSnapshot itemSnapshot = player.getItemInHand().get().createSnapshot();
                 DataContainer dataContainer = itemSnapshot.toContainer();
+                
+                Text msg1ContainerName = Texts.of(TextColors.YELLOW, "Second container: " + dataContainer.toString());
+                player.sendMessage(msg1ContainerName);
                 
                 StringWriter writer = new StringWriter();
                 HoconConfigurationLoader loader = HoconConfigurationLoader.builder().setSink(new Callable<BufferedWriter>() {
@@ -69,11 +75,21 @@ public class JsonCmd implements CommandExecutor {
                 }).build();
                 
                 loader.save(ConfigurateTranslator.instance().translateData(dataContainer));
-                char[] toCharArray = writer.toString().toCharArray();
-                String toString = Arrays.toString(toCharArray);
-                Text msg = Texts.of(TextColors.YELLOW, "CharMass:" + toString);
-                player.sendMessage(msg);
                 
+                //Reader
+                String toString = writer.toString();
+                StringReader reader = new StringReader(toString);
+                DataView view = ConfigurateTranslator.instance().translateFrom(HoconConfigurationLoader.builder().setSource(new Callable<BufferedReader>() {
+                    @Override
+                    public BufferedReader call() {
+                        return new BufferedReader(reader);
+                    }
+                }).build().load());
+                
+                DataContainer container = view.getContainer();
+                
+                Text msg2ContainerName = Texts.of(TextColors.YELLOW, "Second container: " + container.toString());
+                player.sendMessage(msg2ContainerName);
             } catch (IOException ex) {
                 Logger.getLogger(JsonCmd.class.getName()).log(Level.SEVERE, null, ex);
             }
