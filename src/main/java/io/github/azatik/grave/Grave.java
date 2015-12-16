@@ -25,6 +25,8 @@
 package io.github.azatik.grave;
 
 import io.github.azatik.grave.commands.GraveCmd;
+import io.github.azatik.grave.commands.GraveGetCmd;
+import io.github.azatik.grave.commands.GraveGetCmdOne;
 import io.github.azatik.grave.commands.GraveItemCmd;
 import io.github.azatik.grave.commands.GraveSetBlockCmd;
 import org.spongepowered.api.plugin.Plugin;
@@ -33,8 +35,10 @@ import io.github.azatik.grave.commands.GraveShowCmd;
 import io.github.azatik.grave.commands.GraveTestCmd;
 import io.github.azatik.grave.commands.JsonCmd;
 import io.github.azatik.grave.database.DataBase;
+import io.github.azatik.grave.events.EventChangeGrave;
 import io.github.azatik.grave.events.EventChangeSign;
 import io.github.azatik.grave.events.EventDropItem;
+import io.github.azatik.grave.events.EventInteractSign;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import javax.inject.Inject;
@@ -80,6 +84,8 @@ public class Grave {
     public void onGameInit(GameInitializationEvent event) {
         eventManager.registerListeners(this, new EventDropItem());
         eventManager.registerListeners(this, new EventChangeSign());
+        eventManager.registerListeners(this, new EventChangeGrave());
+        //eventManager.registerListeners(this, new EventInteractSign());
         
         registerCommands();
         
@@ -130,6 +136,18 @@ public class Grave {
                         GenericArguments.onlyOne(GenericArguments.string(Texts.of("item"))))
                 .executor(new GraveTestCmd()).build();
         
+        CommandSpec graveGetOne = CommandSpec.builder()
+                .description(Texts.of("Get one item from items table"))
+                .permission("grave.show")
+                .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("Number"))))
+                .executor(new GraveGetCmdOne()).build();
+        
+        CommandSpec graveGet = CommandSpec.builder()
+                .description(Texts.of("Get items from grave"))
+                .permission("grave.get")
+                .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("Number"))))
+                .executor(new GraveGetCmd()).build();
+        
         //Command grave (parent)
         CommandSpec graveCommand = CommandSpec.builder()
                 .description(Texts.of("/grave [show|soon|soon]"))
@@ -139,6 +157,8 @@ public class Grave {
                 .child(graveItem, "item")
                 .child(graveSetBlock, "set")
                 .child(graveTest, "test")
+                .child(graveGetOne, "getone")
+                .child(graveGet, "get")
                 .build();
                 game.getCommandManager().register(this, graveCommand, "grave");
                 

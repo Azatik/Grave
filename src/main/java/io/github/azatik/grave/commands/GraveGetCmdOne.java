@@ -24,9 +24,14 @@
  */
 package io.github.azatik.grave.commands;
 
-import io.github.azatik.grave.utils.SignManipulator;
-import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.block.tileentity.TileEntity;
+import io.github.azatik.grave.Grave;
+import static io.github.azatik.grave.database.DataBase.getItem;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -34,45 +39,53 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.data.DataContainer;
+import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.entity.Entity;
+import org.spongepowered.api.entity.EntityTypes;
+import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.cause.Cause;
+import org.spongepowered.api.item.ItemTypes;
+import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
-import static org.spongepowered.api.util.Direction.SOUTH;
-import org.spongepowered.api.util.PositionOutOfBoundsException;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
 
-public class GraveSetBlockCmd implements CommandExecutor {
+public class GraveGetCmdOne implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        Game game = Grave.getInstance().getGame();
+        Optional<String> graveNumber = args.getOne("Number");
         if (src instanceof Player) {
-            SignManipulator dataofsign = new SignManipulator();
             Player player = (Player) src;
-            World world = player.getWorld();
-            
-            Location<World> location = player.getLocation();
-            Location<World> location2 = new Location(world,
-                    location.getBlockX(),
-                    location.getBlockY(),
-                    location.getBlockZ() + 1);
-            try {
-                location.setBlockType(BlockTypes.STONE);
-                location2.setBlock(BlockTypes.WALL_SIGN.getDefaultState().with(Keys.DIRECTION, SOUTH).get());
-                Text msgPlayer = Texts.of(TextColors.DARK_GREEN, "Block set");
-                player.sendMessage(msgPlayer);
-                
-                TileEntity tile = (TileEntity) location2.getTileEntity().get();
-                    Text line0 = Texts.of(TextColors.DARK_RED, "[Grave]");
-                    Text line1 = Texts.of(player.getName());
-                    Text line2 = Texts.of(TextColors.DARK_GREEN, "#x");
-                    dataofsign.setLines(tile, line0, line1, line2, null);
-                
-            } catch (PositionOutOfBoundsException e) {
-                Text msgPlayer2 = Texts.of(TextColors.DARK_RED, "Block NOT set");
-                player.sendMessages(msgPlayer2);
+            if (graveNumber.isPresent()) {
+                try {
+                    Integer graveNumberInt = new Integer(graveNumber.get());
+                    DataView itemDb = getItem(graveNumberInt);
+
+                    /*items.stream().forEach((DataView item) -> {
+                    Text output = Texts.of(item.getContainer().toString());
+                    player.sendMessages(output);
+                    });*/
+                    //DataContainer container = items.get(0).getContainer();
+                    
+                    ItemStack stack = game.getRegistry().createBuilder(ItemStack.Builder.class).fromContainer(itemDb).build();
+                    
+                    Optional<Entity> optItem = player.getLocation().getExtent().createEntity(EntityTypes.ITEM, player.getLocation().getPosition());
+                    if (optItem.isPresent()) {
+                        Item item = (Item) optItem.get();
+                        item.offer(Keys.REPRESENTED_ITEM, stack.createSnapshot());
+                        player.getWorld().spawnEntity(item, Cause.of(player));
+                    }
+                    
+                    player.sendMessages(Texts.of(TextColors.GOLD, "Вы получили предмет - " + stack.getItem().getName()));
+                    return CommandResult.success();
+                } catch (SQLException | IOException ex) {
+                    Logger.getLogger(GraveGetCmdOne.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             
         } else if (src instanceof ConsoleSource) {

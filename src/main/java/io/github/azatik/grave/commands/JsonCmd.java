@@ -24,12 +24,18 @@
  */
 package io.github.azatik.grave.commands;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import io.github.azatik.grave.Grave;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,13 +78,29 @@ public class JsonCmd implements CommandExecutor {
                     public BufferedWriter call() {
                         return new BufferedWriter(writer);
                     }
-                }).build();
-                
+                }).build();               
                 loader.save(ConfigurateTranslator.instance().translateData(dataContainer));
                 
+                //String in DataBase
+                String stringDB = writer.toString();
+                Text stringDBMsg = Texts.of(TextColors.YELLOW, "String DB: " + stringDB);
+                player.sendMessage(stringDBMsg);
+                ArrayList<String> one = new ArrayList();
+                one.add(stringDB);
+                one.add(stringDB);
+                
+                Gson gson = new GsonBuilder().create();
+                String toJson = gson.toJson(one);
+                Text toJsonMsg = Texts.of(TextColors.AQUA, "Serialize: " + toJson);
+                player.sendMessage(toJsonMsg);
+                
+                Type type = new TypeToken<List<String>>() {
+                }.getType();
+                ArrayList<String> desOne = gson.fromJson(toJson,type);
+                Text fromJsonMsg = Texts.of(TextColors.AQUA, "Deserialize: " + desOne.get(0));
+                player.sendMessage(fromJsonMsg);
                 //Reader
-                String toString = writer.toString();
-                StringReader reader = new StringReader(toString);
+                StringReader reader = new StringReader(stringDB);
                 DataView view = ConfigurateTranslator.instance().translateFrom(HoconConfigurationLoader.builder().setSource(new Callable<BufferedReader>() {
                     @Override
                     public BufferedReader call() {
@@ -87,7 +109,6 @@ public class JsonCmd implements CommandExecutor {
                 }).build().load());
                 
                 DataContainer container = view.getContainer();
-                
                 Text msg2ContainerName = Texts.of(TextColors.YELLOW, "Second container: " + container.toString());
                 player.sendMessage(msg2ContainerName);
             } catch (IOException ex) {

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.data.key.Keys;
+import org.spongepowered.api.data.manipulator.immutable.tileentity.ImmutableSignData;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
@@ -49,6 +50,20 @@ public class SignManipulator {
 }
     
     public ArrayList<String> getLines(SignData signdata) {
+        List<Text> textSignLines = signdata.getValue(Keys.SIGN_LINES).get().getAll();
+
+        Texts.toPlain(textSignLines.get(0));
+
+        ArrayList<String> stringSignLines = new ArrayList();
+        stringSignLines.add(Texts.toPlain(textSignLines.get(0)));
+        stringSignLines.add(Texts.toPlain(textSignLines.get(1)));
+        stringSignLines.add(Texts.toPlain(textSignLines.get(2)));
+        stringSignLines.add(Texts.toPlain(textSignLines.get(3)));
+
+        return stringSignLines;
+    }
+    
+    public ArrayList<String> getLines(ImmutableSignData signdata) {
         List<Text> textSignLines = signdata.getValue(Keys.SIGN_LINES).get().getAll();
 
         Texts.toPlain(textSignLines.get(0));
