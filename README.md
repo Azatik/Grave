@@ -5,4 +5,6 @@ Adds graves for your server.
 
 Version: Early Alpha.
 
-This repository is not will updated for a long time. Waiting Implements inventoryAPI.
+Grave demonstration:
+
+https://www.youtube.com/watch?v=naejmbqMtCY

@@ -24,8 +24,6 @@
  */
 package io.github.azatik.grave.events;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import io.github.azatik.grave.Grave;
 import io.github.azatik.grave.database.DataBase;
 import static io.github.azatik.grave.database.DataBase.getLastGrave;

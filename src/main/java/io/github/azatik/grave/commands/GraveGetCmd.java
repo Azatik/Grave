@@ -33,7 +33,7 @@ public class GraveGetCmd implements CommandExecutor {
                     
                     DataBase.materializeItems(graveNumberInt, player.getLocation(), player);
                     
-                    player.sendMessages(Texts.of(TextColors.GOLD, "Могила материализовалась."));
+                    player.sendMessages(Texts.of(TextColors.GOLD, "Материализовалась могила #" + graveNumberInt));
                     return CommandResult.success();
                 } catch (SQLException | IOException ex) {
                     Logger.getLogger(GraveGetCmdOne.class.getName()).log(Level.SEVERE, null, ex);
