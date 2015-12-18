@@ -27,7 +27,6 @@ package io.github.azatik.grave.events;
 import io.github.azatik.grave.Grave;
 import io.github.azatik.grave.utils.SignManipulator;
 import java.util.ArrayList;
-import java.util.Optional;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.data.manipulator.immutable.tileentity.ImmutableSignData;
@@ -52,18 +51,23 @@ public class EventChangeGrave {
         boolean playerCause = event.getCause().first(Player.class).isPresent();
         if (playerCause) {
             Player player = event.getCause().first(Player.class).get();
-
+            
+                    Text msg3 = Texts.of(TextColors.GRAY, "You do broke");
+                    player.sendMessages(msg3);
+            
             event.getTransactions().stream().forEach((trans) -> {
-                if (!trans.getOriginal().getState().getType().equals(BlockTypes.WALL_SIGN)) {
+                if (trans.getOriginal().getState().getType().equals(BlockTypes.WALL_SIGN)) {
 
-                    /*SignManipulator dataofsign = new SignManipulator();
-                    Location<World> location = trans.getOriginal().getLocation().get();
-                    TileEntity tileEntity = (TileEntity) location.getTileEntity().get();
-                    ArrayList<String> signLines = dataofsign.getLines(tileEntity);
-                    SignData signData = trans.getOriginal().getLocation().get().getOrCreate(SignData.class).get();
-                    ArrayList<String> signLines = dataofsign.getLines(signData);
+                    SignManipulator dataofsign = new SignManipulator();
                     
-                    Text line0 = Texts.of(TextColors.GRAY, signLines.get(0));                   
+                    Location<World> location = trans.getOriginal().getLocation().get();
+                    TileEntity tileEntity = location.getTileEntity().get();
+                    ArrayList<String> signLines = dataofsign.getLines(tileEntity);
+                    
+                    /*SignData signData = trans.getOriginal().getLocation().get().getOrCreate(SignData.class).get();
+                    ArrayList<String> signLines1 = dataofsign.getLines(signData);
+                    
+                    Text line0 = Texts.of(TextColors.GRAY, signLines1.get(0));                   
                     
                     player.sendMessages(line0);
 
@@ -74,9 +78,17 @@ public class EventChangeGrave {
                             player.sendMessages(msgID);
                         }
                     }*/
-                    Location<World> location = trans.getOriginal().getLocation().get();
+                    
+                    /*Location<World> location = trans.getOriginal().getLocation().get();
                     Text msg = Texts.of(TextColors.GRAY, "You broke: " + location.getBlockType().getName());
-                    player.sendMessages(msg);
+                    player.sendMessages(msg);*/
+                    
+                    /*ImmutableSignData data = trans.getOriginal().getOrCreate(ImmutableSignData.class).get();
+                    ArrayList<String> signLines = dataofsign.getLines(data);*/
+                    Text msg2 = Texts.of(TextColors.GRAY, "First Line: " + signLines.get(0));
+                    player.sendMessages(msg2);
+                    
+                    
                 }
             });
         }

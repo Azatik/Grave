@@ -39,6 +39,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.Callable;
 import javax.sql.DataSource;
@@ -56,6 +57,7 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.service.sql.SqlService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 
 public class DataBase {
@@ -264,6 +266,7 @@ public class DataBase {
         return view;
     }
     
+    static int counterError = 0;   
     public static void materializeItems(int graveNumber, Location location, Player player) throws SQLException, IOException {
         Connection connection = datasource.getConnection();
         Statement statement = connection.createStatement();
@@ -279,14 +282,22 @@ public class DataBase {
         }
         
         viewsList.stream().forEach((DataView view) -> {
+            
+            try{
             ItemStack stack = game.getRegistry().createBuilder(ItemStack.Builder.class).fromContainer(view).build();
             
             Optional<Entity> optItem = location.getExtent().createEntity(EntityTypes.ITEM, location.getPosition());
-                    if (optItem.isPresent()) {
-                        Item item = (Item) optItem.get();
-                        item.offer(Keys.REPRESENTED_ITEM, stack.createSnapshot());
-                        player.getWorld().spawnEntity(item, Cause.of(player));
-                    }
+            if (optItem.isPresent()) {
+                Item item = (Item) optItem.get();
+                item.offer(Keys.REPRESENTED_ITEM, stack.createSnapshot());
+                player.getWorld().spawnEntity(item, Cause.of(player));
+            }}catch (NoSuchElementException e) {
+                counterError++;              
+            }        
         });
+        if (counterError != 0) {
+            player.sendMessages(Texts.of(TextColors.RED, "Не образовалось " + counterError + " предметов, так как они больше не существуют."));
+            counterError = 0;
+        }      
     }
 }
