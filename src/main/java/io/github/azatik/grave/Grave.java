@@ -38,6 +38,7 @@ import io.github.azatik.grave.database.DataBase;
 import io.github.azatik.grave.events.EventChangeGrave;
 import io.github.azatik.grave.events.EventChangeSign;
 import io.github.azatik.grave.events.EventDropItem;
+import io.github.azatik.grave.events.EventDropItemCauseTest;
 import io.github.azatik.grave.events.EventInteractSign;
 import io.github.azatik.grave.events.EventRightClickGrave;
 import java.sql.SQLException;
@@ -83,10 +84,12 @@ public class Grave {
     
     @Listener
     public void onGameInit(GameInitializationEvent event) {
-        eventManager.registerListeners(this, new EventDropItem());
+        eventManager.registerListeners(this, new EventDropItem());        
         eventManager.registerListeners(this, new EventChangeSign());
         eventManager.registerListeners(this, new EventRightClickGrave());
+        //eventManager.registerListeners(this, new EventDropItemCauseTest());
         //eventManager.registerListeners(this, new EventChangeGrave());
+        
         //eventManager.registerListeners(this, new EventInteractSign());
         
         registerCommands();
