@@ -22,7 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.azatik.grave.commands;
+package io.github.azatik.grave.oldcommands;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -22,10 +22,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.azatik.grave.commands;
+package io.github.azatik.grave.oldcommands;
 
-import io.github.azatik.grave.Grave;
-import org.spongepowered.api.Game;
+import java.util.Optional;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -33,32 +32,38 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 
-public class GraveContainerCmd implements CommandExecutor {
-    
+public class GraveShowCmd implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        Game game = Grave.getInstance().getGame();
+        Optional<String> playerName = args.getOne("Player");
         if (src instanceof Player) {
-            Player player = (Player) src;         
-            ItemStack stack = game.getRegistry().createBuilder(ItemStack.Builder.class).build();
-            
-            String contSt = "MemoryDataContainer{map={ItemType=ironbackpacks:basicBackpack, Count=1, UnsafeDamage=0, UnsafeData=MemoryDataView{path=UnsafeData, map={Upgrades=[MemoryDataContainer{map={Upgrade=2}}], MostSigUUID=-1213882153550525462, LeastSigUUID=-8069292939825562437, Items=[MemoryDataContainer{map={Slot=0, id=minecraft:wool, Count=1, Damage=3}}, MemoryDataContainer{map={Slot=1, id=minecraft:wool, Count=1, Damage=2}}, MemoryDataContainer{map={Slot=2, id=minecraft:stone, Count=1, Damage=2}}]}}}}";
-            //DataContainer cont = contSt;
-            
-            
-            
-            //stack.setRawData(cont);
-            
+            Player player = (Player) src;
+            if (playerName.isPresent()) {
+                if (player.hasPermission("grave.show.player")) {
+
+                    String stringPlayerName = playerName.get();
+
+                    Text msgPlayer = Texts.of(TextColors.GREEN, "Ты хочешь получить все могилы игрока " + stringPlayerName + ".");
+                    player.sendMessage(msgPlayer);
+                    return CommandResult.success();
+                } else {
+                    Text texts = Texts.of(TextColors.DARK_RED, "У тебя нет прав на выполнение этой команды!");
+                    player.sendMessages(texts);
+                }
+            }
+            String name = player.getName();
+
+            Text msgPlayer = Texts.of(TextColors.GREEN, "Ты, " + name + ", хочешь получить все свои могилы.");
+            player.sendMessage(msgPlayer);
         } else if (src instanceof ConsoleSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
+            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
         } else if (src instanceof CommandBlockSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
+            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
         }
         return CommandResult.success();
     }

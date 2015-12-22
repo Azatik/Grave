@@ -22,29 +22,45 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.azatik.grave.commands;
+package io.github.azatik.grave.oldcommands;
 
-import io.github.azatik.grave.Grave;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.source.CommandBlockSource;
+import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 
-public class GraveCmd implements CommandExecutor {
-    
+public class GraveTestCmd implements CommandExecutor {
+
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        
-        src.sendMessage(Texts.of(TextColors.DARK_GREEN, Grave.PLUGIN_NAME,
-                TextColors.GREEN, " version: ", TextColors.DARK_GREEN,
-                Grave.PLUGIN_VERSION, TextColors.GREEN, " by ",
-                TextColors.DARK_GREEN, "Azatik"));
-        
+        /*Optional<String> dbArg = args.getOne("db");
+        Optional<String> itemArg = args.getOne("item");*/
+        if (src instanceof Player) {
+            Player player = (Player) src;
+            /*if (args.hasAny("db")) {
+                Text msgPlayer = Texts.of(TextColors.GREEN, "Ты хочешь работать с командой db.");
+                player.sendMessage(msgPlayer);
+            }*/
+            if (args.hasAny("item")){
+                ItemStackSnapshot itemSnapshot = player.getItemInHand().get().createSnapshot();
+                String itemContainer = itemSnapshot.toContainer().toString();
+                Text msgPlayer = Texts.of(TextColors.GREEN, "ItemContainer:" + "\n", TextColors.WHITE, itemContainer);
+                player.sendMessage(msgPlayer);
+            }
+            
+        } else if (src instanceof ConsoleSource) {
+            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
+        } else if (src instanceof CommandBlockSource) {
+            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
+        }
         return CommandResult.success();
     }
-
 }
-

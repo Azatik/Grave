@@ -1,4 +1,4 @@
-package io.github.azatik.grave.commands;
+package io.github.azatik.grave.oldcommands;
 
 import io.github.azatik.grave.Grave;
 import io.github.azatik.grave.database.DataBase;

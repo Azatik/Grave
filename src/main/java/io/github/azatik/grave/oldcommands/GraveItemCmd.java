@@ -22,15 +22,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.azatik.grave.commands;
+package io.github.azatik.grave.oldcommands;
 
+import com.google.common.io.CharSink;
 import io.github.azatik.grave.Grave;
-import static io.github.azatik.grave.database.DataBase.getItem;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.SQLException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -40,7 +42,6 @@ import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.data.DataContainer;
-import org.spongepowered.api.data.DataView;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.EntityTypes;
@@ -49,45 +50,54 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
+import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 
-public class GraveGetCmdOne implements CommandExecutor {
+public class GraveItemCmd implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         Game game = Grave.getInstance().getGame();
-        Optional<String> graveNumber = args.getOne("Number");
         if (src instanceof Player) {
             Player player = (Player) src;
-            if (graveNumber.isPresent()) {
+            if (args.getOne("file").isPresent()) {
+                ItemStackSnapshot itemSnapshot = player.getItemInHand().get().createSnapshot();
+                String itemContainer = itemSnapshot.toContainer().toString();
+                DataContainer toContainer = itemSnapshot.toContainer();
+                Text msgPlayer = Texts.of(TextColors.GREEN, "ItemContainer:" + "\n", TextColors.WHITE, itemContainer);
+                player.sendMessage(msgPlayer);
+                
+                FileWriter writeFile = null;
                 try {
-                    Integer graveNumberInt = new Integer(graveNumber.get());
-                    DataView itemDb = getItem(graveNumberInt);
-
-                    /*items.stream().forEach((DataView item) -> {
-                    Text output = Texts.of(item.getContainer().toString());
-                    player.sendMessages(output);
-                    });*/
-                    //DataContainer container = items.get(0).getContainer();
-                    
-                    ItemStack stack = game.getRegistry().createBuilder(ItemStack.Builder.class).fromContainer(itemDb).build();
-                    
-                    Optional<Entity> optItem = player.getLocation().getExtent().createEntity(EntityTypes.ITEM, player.getLocation().getPosition());
-                    if (optItem.isPresent()) {
-                        Item item = (Item) optItem.get();
-                        item.offer(Keys.REPRESENTED_ITEM, stack.createSnapshot());
-                        player.getWorld().spawnEntity(item, Cause.of(player));
+                    File logFile = new File("container.txt");
+                    writeFile = new FileWriter(logFile);
+                    writeFile.append(itemContainer);
+                } catch (IOException e) {
+                } finally {
+                    if (writeFile != null) {
+                        try {
+                            writeFile.close();
+                        } catch (IOException e) {
+                        }
                     }
-                    
-                    player.sendMessages(Texts.of(TextColors.GOLD, "Вы получили предмет - " + stack.getItem().getName()));
-                    return CommandResult.success();
-                } catch (SQLException | IOException ex) {
-                    Logger.getLogger(GraveGetCmdOne.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
+                
+                
+            } else {
+                ItemStack stack = game.getRegistry().createBuilder(ItemStack.Builder.class).itemType(ItemTypes.BRICK).quantity(6).build();
+                Optional<Entity> optItem = player.getLocation().getExtent().createEntity(EntityTypes.ITEM, player.getLocation().getPosition());
+                if (optItem.isPresent()) {
+                    Item item = (Item) optItem.get();
+                    item.offer(Keys.REPRESENTED_ITEM, stack.createSnapshot());
+                    player.getWorld().spawnEntity(item, Cause.of(player));
+                }
+                Text msgPlayer = Texts.of(TextColors.GREEN, "Предмет дропнулся.");
+                player.sendMessage(msgPlayer);
+
             }
-            
         } else if (src instanceof ConsoleSource) {
             src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
         } else if (src instanceof CommandBlockSource) {

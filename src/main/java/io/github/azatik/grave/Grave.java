@@ -24,36 +24,22 @@
  */
 package io.github.azatik.grave;
 
-import io.github.azatik.grave.commands.GraveCmd;
-import io.github.azatik.grave.commands.GraveGetCmd;
-import io.github.azatik.grave.commands.GraveGetCmdOne;
-import io.github.azatik.grave.commands.GraveItemCmd;
-import io.github.azatik.grave.commands.GraveSetBlockCmd;
 import org.spongepowered.api.plugin.Plugin;
 import org.slf4j.Logger;
-import io.github.azatik.grave.commands.GraveShowCmd;
-import io.github.azatik.grave.commands.GraveTestCmd;
-import io.github.azatik.grave.commands.JsonCmd;
 import io.github.azatik.grave.database.DataBase;
-import io.github.azatik.grave.events.EventChangeGrave;
 import io.github.azatik.grave.events.EventChangeSign;
 import io.github.azatik.grave.events.EventDropItem;
-import io.github.azatik.grave.events.EventDropItemCauseTest;
-import io.github.azatik.grave.events.EventInteractSign;
 import io.github.azatik.grave.events.EventRightClickGrave;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import javax.inject.Inject;
 import org.spongepowered.api.Game;
-import org.spongepowered.api.command.args.GenericArguments;
-import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.event.EventManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
-import org.spongepowered.api.text.Texts;
 
 @Plugin(id = Grave.PLUGIN_ID, name = Grave.PLUGIN_NAME, version = Grave.PLUGIN_VERSION)
 public class Grave {
@@ -113,7 +99,7 @@ public class Grave {
     }
     
     private void registerCommands() {
-        //Command grave show (children Grave)
+        /*//Command grave show (children Grave)
         CommandSpec graveShow = CommandSpec.builder()
                 .description(Texts.of("This command show your graves"))
                 .permission("grave.show")
@@ -137,7 +123,7 @@ public class Grave {
         CommandSpec graveTest = CommandSpec.builder()
                 .description(Texts.of("This command for test SetBlock (test command)"))
                 .permission("grave.test")
-                .arguments(/*GenericArguments.optional(GenericArguments.string(Texts.of("db"))), */
+                .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("db"))),
                         GenericArguments.onlyOne(GenericArguments.string(Texts.of("item"))))
                 .executor(new GraveTestCmd()).build();
         
@@ -173,6 +159,6 @@ public class Grave {
                 .permission("json")
                 .executor(new JsonCmd())
                 .build();
-                game.getCommandManager().register(this, jsonCommand, "json");
+                game.getCommandManager().register(this, jsonCommand, "json");*/
     }
 }
