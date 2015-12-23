@@ -120,7 +120,7 @@ public class EventDropItem {
                         }
                     });
 
-                    int playerId = DataBase.getPlayerIdInGrave(player);
+                    int playerId = DataBase.getPlayerId(player);
                     String executeInGrave = ("insert into graves(player_id, world_name, coord_x, coord_y, coord_z) values (%s, '%s', %s, %s, %s);");
                     String executeFormatInGrave = String.format(executeInGrave, playerId, world.getName(), LocSign.getBlockX(), LocSign.getBlockY(), LocSign.getBlockZ());
 

@@ -23,7 +23,6 @@ public class GraveGetCmd implements CommandExecutor {
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-        Game game = Grave.getInstance().getGame();
         Optional<String> graveNumber = args.getOne("Number");
         if (src instanceof Player) {
             Player player = (Player) src;
@@ -36,7 +35,7 @@ public class GraveGetCmd implements CommandExecutor {
                     player.sendMessages(Texts.of(TextColors.GOLD, "Материализовалась могила #" + graveNumberInt));
                     return CommandResult.success();
                 } catch (SQLException | IOException ex) {
-                    Logger.getLogger(GraveGetCmdOne.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(GraveGetCmd.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
             

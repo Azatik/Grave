@@ -24,6 +24,9 @@
  */
 package io.github.azatik.grave;
 
+import io.github.azatik.grave.commands.GraveCmd;
+import io.github.azatik.grave.commands.GraveHelpCmd;
+import io.github.azatik.grave.commands.GraveShowCmd;
 import org.spongepowered.api.plugin.Plugin;
 import org.slf4j.Logger;
 import io.github.azatik.grave.database.DataBase;
@@ -34,12 +37,15 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import javax.inject.Inject;
 import org.spongepowered.api.Game;
+import org.spongepowered.api.command.args.GenericArguments;
+import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.event.EventManager;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
+import org.spongepowered.api.text.Texts;
 
 @Plugin(id = Grave.PLUGIN_ID, name = Grave.PLUGIN_NAME, version = Grave.PLUGIN_VERSION)
 public class Grave {
@@ -160,5 +166,26 @@ public class Grave {
                 .executor(new JsonCmd())
                 .build();
                 game.getCommandManager().register(this, jsonCommand, "json");*/
+        
+        CommandSpec graveHelpCommand = CommandSpec.builder()
+                .description(Texts.of("help command"))
+                .permission("grave.help")
+                .executor(new GraveHelpCmd())
+                .build();
+        
+        CommandSpec graveShowCommand = CommandSpec.builder()
+                .description(Texts.of("This command show your graves"))
+                .permission("grave.show")
+                .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("player"))))
+                .executor(new GraveShowCmd()).build();
+        
+        CommandSpec graveCommand = CommandSpec.builder()
+                .description(Texts.of("essentials command"))
+                .permission("grave.command")
+                .executor(new GraveCmd())
+                .child(graveHelpCommand, "help")
+                .child(graveShowCommand, "show")
+                .build();
+        game.getCommandManager().register(this, graveCommand, "grave");
     }
 }

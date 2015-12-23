@@ -24,14 +24,10 @@
  */
 package io.github.azatik.grave.database;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import io.github.azatik.grave.Grave;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -41,7 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.concurrent.Callable;
 import javax.sql.DataSource;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.api.Game;
@@ -67,8 +62,6 @@ public class DataBase {
 
     public static void setup(Game game) throws SQLException {
         sql = game.getServiceManager().provide(SqlService.class).get();
-        //datasource = sql.getDataSource("jdbc:h2:file:./mods/grave/grave");
-        //datasource = sql.getDataSource("jdbc:sqlite:./mods/grave/grave.sqlite");
 
         String host = "localhost";
         String port = "3306";
@@ -77,6 +70,7 @@ public class DataBase {
         String database = "plgrave";
 
         datasource = sql.getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
+        //datasource = sql.getDataSource("jdbc:h2:file:./mods/grave/grave");
 
         DatabaseMetaData metadata = datasource.getConnection().getMetaData();
         ResultSet resultset = metadata.getTables(null, null, "%", null);
@@ -107,7 +101,6 @@ public class DataBase {
                 statement.close();
                 connection.close();
             }
-
         } catch (SQLException e) {
         }
     }
@@ -128,39 +121,17 @@ public class DataBase {
         rs.close();
         statement.close();
         connection.close();
-
         return graveId;
     }
 
-    public static ArrayList<Text> GetListTextRs() throws SQLException {
-        Connection connection = datasource.getConnection();
-        Statement statement = connection.createStatement();
-        String execute = "SELECT graves.id, players.name, graves.world_name, graves.coord_x, graves.coord_y, graves.coord_z from players join graves on graves.player_id = players.id";
-        ResultSet rs = statement.executeQuery(execute);
-
-        ArrayList<Text> ListTextRs = new ArrayList();
-        Text ElementRs;
-
-        while (rs.next()) {
-            ElementRs = Texts.of("id = " + rs.getString("graves.id") + ", player = " + rs.getString("players.name") + ", world = " + rs.getString("graves.world_name") + ", X: " + rs.getInt("graves.coord_x") + ", Y: " + rs.getInt("graves.coord_y") + ", Z: " + rs.getInt("graves.coord_z") + ";");
-            ListTextRs.add(ElementRs);
-        }
-
-        rs.close();
-        statement.close();
-        connection.close();
-
-        return ListTextRs;
-    }
-
-    public static int getPlayerIdInGrave(Player player) throws SQLException {
+    public static int getPlayerId(Player player) throws SQLException {
         Connection connection = datasource.getConnection();
         Statement statement = connection.createStatement();
         String executeGetPlayers = "select * from players";
         ResultSet rsGetPlayers = statement.executeQuery(executeGetPlayers);
         ArrayList<String> namesPlayers = new ArrayList();
         String elementPlayerName;
-        String playerName = player.getName();
+        String playerName = player.getName().toLowerCase();
 
         while (rsGetPlayers.next()) {
             elementPlayerName = rsGetPlayers.getString("name");
@@ -185,119 +156,110 @@ public class DataBase {
         return playerIdInGrave;
     }
 
-    //Test Method
-    /*public static ArrayList<DataView> getItems(int graveNumber, Player player) throws SQLException, IOException {
-     Connection connection = datasource.getConnection();
-     Statement statement = connection.createStatement();
-     String executeGetGrave = "select items from graves where id = " + graveNumber;
-     ResultSet rs = statement.executeQuery(executeGetGrave);
-     rs.first();
+    static int counterError = 0;
 
-     String string = rs.getString("items");
-     Type type = new TypeToken<List<String>>() {
-     }.getType();
-     Gson gson = new GsonBuilder().create();
-
-     ArrayList<String> listItemsDes = gson.fromJson(string, type);
-     //ArrayList<DataView> dataViews2 = new ArrayList();
-
-        
-     listItemsDes.stream().forEach((String containerDeser) -> {
-     try {
-     String replace = containerDeser.replace("&#034", "\"").replace("&#061", "=");
-     StringReader reader = new StringReader(replace);
-                               
-     DataView view = GetDataViewForGetItems(reader);
-     dataViews.add(view);
-     } catch (IOException ex) {
-     Logger.getLogger(DataBase.class.getName()).log(Level.SEVERE, null, ex);
-     }
-     });
-     return dataViews;
-     }
-    
-     public static DataView GetDataViewForGetItems(StringReader reader) throws IOException {
-     DataView view = (ConfigurateTranslator.instance().translateFrom(HoconConfigurationLoader.builder().setSource(new Callable<BufferedReader>() {
-     @Override
-     public BufferedReader call() {
-     return new BufferedReader(reader);
-     }
-     }).build().load()));
-     return view;
-     }*/
-    public static DataView getItem0(int graveNumber) throws SQLException, IOException {
-        Connection connection = datasource.getConnection();
-        Statement statement = connection.createStatement();
-        String executeGetGrave = "select items from graves where id = " + graveNumber;
-        ResultSet rs = statement.executeQuery(executeGetGrave);
-        rs.first();
-
-        String string = rs.getString("items");
-        Type type = new TypeToken<List<String>>() {
-        }.getType();
-        Gson gson = new GsonBuilder().create();
-
-        ArrayList<String> listItemsDes = gson.fromJson(string, type);
-        String replace = listItemsDes.get(0).replace("&#034", "\"").replace("&#061", "=");
-        StringReader reader = new StringReader(replace);
-
-        DataView view = (ConfigurateTranslator.instance().translateFrom(HoconConfigurationLoader.builder().setSource(new Callable<BufferedReader>() {
-            @Override
-            public BufferedReader call() {
-                return new BufferedReader(reader);
-            }
-        }).build().load()));
-
-        return view;
-    }
-
-    public static DataView getItem(int itemNumber) throws SQLException, IOException {
-        Connection connection = datasource.getConnection();
-        Statement statement = connection.createStatement();
-        String executeGetGrave = "select item from items where id = " + itemNumber;
-        ResultSet rs = statement.executeQuery(executeGetGrave);
-        rs.first();
-
-        String string = rs.getString("item");
-
-        StringReader reader = new StringReader(string);
-        DataView view = (ConfigurateTranslator.instance().translateFrom(HoconConfigurationLoader.builder().setSource(() -> new BufferedReader(reader)).build().load()));
-
-        return view;
-    }
-    
-    static int counterError = 0;   
     public static void materializeItems(int graveNumber, Location location, Player player) throws SQLException, IOException {
         Connection connection = datasource.getConnection();
         Statement statement = connection.createStatement();
         String executeGetGrave = "select item from items where grave_id = " + graveNumber;
         ResultSet rs = statement.executeQuery(executeGetGrave);
         Game game = Grave.getInstance().getGame();
-        
+
         ArrayList<DataView> viewsList = new ArrayList();
         while (rs.next()) {
             StringReader reader = new StringReader(rs.getString("item"));
             DataView view = (ConfigurateTranslator.instance().translateFrom(HoconConfigurationLoader.builder().setSource(() -> new BufferedReader(reader)).build().load()));
             viewsList.add(view);
         }
-        
+
         viewsList.stream().forEach((DataView view) -> {
-            
-            try{
-            ItemStack stack = game.getRegistry().createBuilder(ItemStack.Builder.class).fromContainer(view).build();
-            
-            Optional<Entity> optItem = location.getExtent().createEntity(EntityTypes.ITEM, location.getPosition());
-            if (optItem.isPresent()) {
-                Item item = (Item) optItem.get();
-                item.offer(Keys.REPRESENTED_ITEM, stack.createSnapshot());
-                player.getWorld().spawnEntity(item, Cause.of(player));
-            }}catch (NoSuchElementException e) {
-                counterError++;              
-            }        
+
+            try {
+                ItemStack stack = game.getRegistry().createBuilder(ItemStack.Builder.class).fromContainer(view).build();
+
+                Optional<Entity> optItem = location.getExtent().createEntity(EntityTypes.ITEM, location.getPosition());
+                if (optItem.isPresent()) {
+                    Item item = (Item) optItem.get();
+                    item.offer(Keys.REPRESENTED_ITEM, stack.createSnapshot());
+                    player.getWorld().spawnEntity(item, Cause.of(player));
+                }
+            } catch (NoSuchElementException e) {
+                counterError++;
+            }
         });
         if (counterError != 0) {
             player.sendMessages(Texts.of(TextColors.RED, "Не образовалось " + counterError + " предметов, так как они больше не существуют."));
             counterError = 0;
-        }      
+        }
+
+        rs.close();
+        statement.close();
+        connection.close();
+    }
+
+    public static ArrayList<Text> getGraves(String player) throws SQLException {
+        player = player.toLowerCase();
+        Connection connection = datasource.getConnection();
+        Statement statement = connection.createStatement();
+
+        String executeGetPlayers = "select * from players";
+        ArrayList<String> namesPlayers = new ArrayList();
+        String elementPlayerName;
+
+        ResultSet rsGetPlayers = statement.executeQuery(executeGetPlayers);
+        while (rsGetPlayers.next()) {
+            elementPlayerName = rsGetPlayers.getString("name");
+            namesPlayers.add(elementPlayerName);
+        }
+
+        ArrayList<Text> graves = new ArrayList();
+        if (namesPlayers.contains(player)) {
+            String executeGetUUID = "SELECT UUID from players where name = '" + player + "'";
+            ResultSet rsGetUUID = statement.executeQuery(executeGetUUID);
+            rsGetUUID.first();
+            String strUUID = rsGetUUID.getString("UUID");
+            rsGetUUID.close();
+
+            String executeGetPlayerIds = "select id from players where UUID = '" + strUUID + "'";
+            ArrayList<String> playerIds = new ArrayList();
+            ResultSet rsGetPlayerIds = statement.executeQuery(executeGetPlayerIds);
+            while (rsGetPlayerIds.next()) {
+                String playerId = rsGetPlayerIds.getString("id");
+                playerIds.add(playerId);
+            }
+
+            String column = "players.id = ";
+            String firstId = "'" + playerIds.get(0) + "'";
+            String where1 = column + firstId;
+
+            String result = where1;
+            for (int i = 1; i <= playerIds.size() - 1; i++) {
+                result = result + " or players.id = '" + playerIds.get(i) + "'";
+            }
+
+            String executeGrave = "SELECT graves.id, players.name, graves.world_name, graves.coord_x, graves.coord_y, graves.coord_z from players join graves on graves.player_id = players.id where " + result + "";
+            ResultSet rsGraves = statement.executeQuery(executeGrave);
+
+            Text ElementRs = Texts.of(TextColors.BLUE, "=== # | Имя игрока | Имя мира | x | y | z ===");
+            graves.add(ElementRs);
+
+            while (rsGraves.next()) {
+                ElementRs = Texts.of(TextColors.YELLOW, "#" + rsGraves.getString("graves.id") + " | " + rsGraves.getString("players.name") + " | " + rsGraves.getString("graves.world_name") + " | " + rsGraves.getInt("graves.coord_x") + " | " + rsGraves.getInt("graves.coord_y") + " | " + rsGraves.getInt("graves.coord_z"));
+                graves.add(ElementRs);
+            }
+            
+            ElementRs = Texts.of(TextColors.BLUE, "=================(конец)=================");
+            graves.add(ElementRs);
+            rsGraves.close();
+        } else {
+            Text errorMsg = Texts.of(TextColors.RED, "Игрока " + player + " нет в базе.");
+            graves.add(errorMsg);
+        }
+
+        rsGetPlayers.close();
+        statement.close();
+        connection.close();
+
+        return graves;
     }
 }
