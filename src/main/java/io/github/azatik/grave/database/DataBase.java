@@ -239,18 +239,13 @@ public class DataBase {
 
             String executeGrave = "SELECT graves.id, players.name, graves.world_name, graves.coord_x, graves.coord_y, graves.coord_z from players join graves on graves.player_id = players.id where " + result + "";
             ResultSet rsGraves = statement.executeQuery(executeGrave);
-
-            Text ElementRs = Texts.of(TextColors.BLUE, "=== # | Имя игрока | Имя мира | x | y | z ===");
-            graves.add(ElementRs);
-
+            
+            Text ElementRs;
             while (rsGraves.next()) {
                 ElementRs = Texts.of(TextColors.YELLOW, "#" + rsGraves.getString("graves.id") + " | " + rsGraves.getString("players.name") + " | " + rsGraves.getString("graves.world_name") + " | " + rsGraves.getInt("graves.coord_x") + " | " + rsGraves.getInt("graves.coord_y") + " | " + rsGraves.getInt("graves.coord_z"));
                 graves.add(ElementRs);
             }
-            
-            ElementRs = Texts.of(TextColors.BLUE, "=================(конец)=================");
-            graves.add(ElementRs);
-            rsGraves.close();
+            rsGraves.close();        
         } else {
             Text errorMsg = Texts.of(TextColors.RED, "Игрока " + player + " нет в базе.");
             graves.add(errorMsg);
@@ -259,7 +254,7 @@ public class DataBase {
         rsGetPlayers.close();
         statement.close();
         connection.close();
-
+        
         return graves;
     }
 }

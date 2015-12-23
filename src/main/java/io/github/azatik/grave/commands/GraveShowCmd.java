@@ -54,7 +54,14 @@ public class GraveShowCmd implements CommandExecutor {
                     try {
                         String strPlayerName = playerArg.get();
                         ArrayList<Text> graves = DataBase.getGraves(strPlayerName);
-                        player.sendMessages(graves);
+                        if (!graves.isEmpty()){
+                            player.sendMessages(Texts.of(TextColors.BLUE, "=== # | Имя игрока | Имя мира | x | y | z ==="));
+                            player.sendMessages(graves);
+                            player.sendMessages(Texts.of(TextColors.BLUE, "=================(конец)================="));
+                        }
+                        else {
+                            player.sendMessages(Texts.of(TextColors.GREEN, "У игрока " + strPlayerName +  " нет могил!"));
+                        }                      
                         return CommandResult.success();
                     } catch (SQLException ex) {
                         Logger.getLogger(GraveShowCmd.class.getName()).log(Level.SEVERE, null, ex);
@@ -68,7 +75,13 @@ public class GraveShowCmd implements CommandExecutor {
                 try {
                     String name = player.getName();
                     ArrayList<Text> graves = DataBase.getGraves(name);
-                    player.sendMessages(graves);
+                    if (!graves.isEmpty()) {
+                        player.sendMessages(Texts.of(TextColors.BLUE, "=== # | Имя игрока | Имя мира | x | y | z ==="));
+                        player.sendMessages(graves);
+                        player.sendMessages(Texts.of(TextColors.BLUE, "=================(конец)================="));
+                    } else {
+                        player.sendMessages(Texts.of(TextColors.GREEN, "У тебя нет могил!"));
+                    }
                 } catch (SQLException ex) {
                     Logger.getLogger(GraveShowCmd.class.getName()).log(Level.SEVERE, null, ex);
                 }
