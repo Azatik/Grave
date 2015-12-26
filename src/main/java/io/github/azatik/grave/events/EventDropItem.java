@@ -62,7 +62,7 @@ public class EventDropItem {
     @Listener
     public void onDropItem(DropItemEvent.Destruct event) throws SQLException, IOException {
         Text msgDied;
-        Text noGrave = Texts.of(TextColors.DARK_RED, "Могила не обзовалась по какой-то причине." + "\n"
+        Text noGrave = Texts.of(TextColors.DARK_RED, "Могила не образовалась по какой-то причине." + "\n"
                 + "Ты можешь её восстановить командой /grave repair [# могилы]");
 
         SignManipulator dataofsign = new SignManipulator();
@@ -88,14 +88,9 @@ public class EventDropItem {
                 if ((playerCause && !ownerCause)) {
                     Player player = event.getCause().first(Player.class).get();
                     World world = player.getWorld();
-
-                    Location LocGranite = player.getLocation();
-
+                    
                     //Here is the logic of setting the grave.
-                    Location LocSign = new Location(world,
-                            LocGranite.getBlockX(),
-                            LocGranite.getBlockY(),
-                            LocGranite.getBlockZ() + 1);
+                    Location LocSign = player.getLocation();
 
                     entities.stream().forEach((Entity entity) -> {
                         itemContainers.add(entity.getValue(Keys.REPRESENTED_ITEM).get().get().toContainer());
@@ -136,7 +131,6 @@ public class EventDropItem {
                     });
 
                     try {
-                        LocGranite.setBlockType(BlockTypes.STONE);
                         LocSign.setBlock(BlockTypes.WALL_SIGN.getDefaultState().with(Keys.DIRECTION, SOUTH).get());
 
                         TileEntity tile = (TileEntity) LocSign.getTileEntity().get();

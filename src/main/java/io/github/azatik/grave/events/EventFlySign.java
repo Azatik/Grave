@@ -22,33 +22,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
-//This test event
 package io.github.azatik.grave.events;
 
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.block.InteractBlockEvent;
-import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
-import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.world.Location;
+import org.spongepowered.api.event.block.ChangeBlockEvent;
 
-public class EventInteractSign {
-    
-    @Listener
-    public void onPlayerInteractSign (InteractBlockEvent.Secondary event) {
-        if (event.getCause().first(Player.class).isPresent()) {
-            Player player = (Player) event.getCause().first(Player.class).get();
-            if (event.getTargetBlock().getState().getType().equals(BlockTypes.WALL_SIGN)) {
-                Location location = event.getTargetBlock().getLocation().get();
-                Text msg = Texts.of(TextColors.DARK_GREEN, "Location Wall_Sign "
-                            + location.getPosition().getX() + " | "
-                            + location.getPosition().getY() + " | "
-                            + location.getPosition().getZ() + ".");
-                player.sendMessages(msg);
-            }
-        }
+public class EventFlySign {
+    @Listener //(ignoreCancelled=false, order = BEFORE_POST)
+    public void onFlySign(ChangeBlockEvent.Modify event) {  
+        event.getTransactions().stream().forEach((trans) -> {
+                if (trans.getOriginal().getState().getType().equals(BlockTypes.WALL_SIGN)) {
+                    event.setCancelled(true);              
+                }});
+        
     }
 }

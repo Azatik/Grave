@@ -27,11 +27,13 @@ package io.github.azatik.grave;
 import io.github.azatik.grave.commands.GraveCmd;
 import io.github.azatik.grave.commands.GraveHelpCmd;
 import io.github.azatik.grave.commands.GraveShowCmd;
+import io.github.azatik.grave.commands.TestCmd;
 import org.spongepowered.api.plugin.Plugin;
 import org.slf4j.Logger;
 import io.github.azatik.grave.database.DataBase;
 import io.github.azatik.grave.events.EventChangeSign;
 import io.github.azatik.grave.events.EventDropItem;
+import io.github.azatik.grave.events.EventFlySign;
 import io.github.azatik.grave.events.EventRightClickGrave;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -79,9 +81,9 @@ public class Grave {
         eventManager.registerListeners(this, new EventDropItem());        
         eventManager.registerListeners(this, new EventChangeSign());
         eventManager.registerListeners(this, new EventRightClickGrave());
+        eventManager.registerListeners(this, new EventFlySign());
         //eventManager.registerListeners(this, new EventDropItemCauseTest());
-        //eventManager.registerListeners(this, new EventChangeGrave());
-        
+        //eventManager.registerListeners(this, new EventChangeGrave());        
         //eventManager.registerListeners(this, new EventInteractSign());
         
         registerCommands();
@@ -187,5 +189,12 @@ public class Grave {
                 .child(graveShowCommand, "show")
                 .build();
         game.getCommandManager().register(this, graveCommand, "grave");
+        
+        CommandSpec testCommand = CommandSpec.builder()
+                .description(Texts.of("test command"))
+                .permission("test.command")
+                .executor(new TestCmd())
+                .build();
+        game.getCommandManager().register(this, testCommand, "test");
     }
 }

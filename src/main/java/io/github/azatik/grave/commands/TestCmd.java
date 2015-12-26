@@ -24,6 +24,43 @@
  */
 package io.github.azatik.grave.commands;
 
-public class TestCmd {
-    
+import io.github.azatik.grave.utils.SignManipulator;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.block.tileentity.TileEntity;
+import org.spongepowered.api.command.CommandException;
+import org.spongepowered.api.command.CommandResult;
+import org.spongepowered.api.command.CommandSource;
+import org.spongepowered.api.command.args.CommandContext;
+import org.spongepowered.api.command.source.CommandBlockSource;
+import org.spongepowered.api.command.source.ConsoleSource;
+import org.spongepowered.api.command.spec.CommandExecutor;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
+
+public class TestCmd implements CommandExecutor {
+
+    @Override
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        if (src instanceof Player) {
+            SignManipulator dataofsign = new SignManipulator();
+            Player player = (Player) src;
+            Location<World> location = player.getLocation();
+            location.setBlockType(BlockTypes.WALL_SIGN);
+
+            TileEntity tile = (TileEntity) location.getTileEntity().get();
+            Text line1 = Texts.of(player.getName());
+            Text line2 = Texts.of(TextColors.DARK_GREEN, "Flying Sign");
+            dataofsign.setLines(tile, null, line1, line2, null);
+
+        } else if (src instanceof ConsoleSource) {
+            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
+        } else if (src instanceof CommandBlockSource) {
+            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
+        }
+        return CommandResult.success();
+    }
 }
