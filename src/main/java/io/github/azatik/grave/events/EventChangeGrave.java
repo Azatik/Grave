@@ -28,17 +28,13 @@ import io.github.azatik.grave.Grave;
 import io.github.azatik.grave.utils.SignManipulator;
 import java.util.ArrayList;
 import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.data.manipulator.immutable.tileentity.ImmutableSignData;
-import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.world.Location;
-import org.spongepowered.api.world.World;
 
 public class EventChangeGrave {
 
@@ -60,9 +56,8 @@ public class EventChangeGrave {
 
                     SignManipulator dataofsign = new SignManipulator();
                     
-                    Location<World> location = trans.getOriginal().getLocation().get();
-                    TileEntity tileEntity = location.getTileEntity().get();
-                    ArrayList<String> signLines = dataofsign.getLines(tileEntity);
+                    ImmutableSignData iSignData = trans.getOriginal().get(ImmutableSignData.class).get();
+                    ArrayList<String> signLines = dataofsign.getLines(iSignData);
                     
                     /*SignData signData = trans.getOriginal().getLocation().get().getOrCreate(SignData.class).get();
                     ArrayList<String> signLines1 = dataofsign.getLines(signData);

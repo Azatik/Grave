@@ -27,6 +27,8 @@ package io.github.azatik.grave.events;
 import io.github.azatik.grave.Grave;
 import io.github.azatik.grave.database.DataBase;
 import static io.github.azatik.grave.database.DataBase.getLastGrave;
+import io.github.azatik.grave.utils.LogicClass;
+import io.github.azatik.grave.utils.LogicSetGrave;
 import io.github.azatik.grave.utils.SignManipulator;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -38,7 +40,7 @@ import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
-import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.data.key.Keys;
@@ -89,9 +91,14 @@ public class EventDropItem {
                     Player player = event.getCause().first(Player.class).get();
                     World world = player.getWorld();
                     
-                    //Here is the logic of setting the grave.
                     Location LocSign = player.getLocation();
-
+                    
+                    //Here is the logic of setting the grave.
+                    LogicClass newGrave = LogicSetGrave.setGrave(LocSign, world);
+                              
+                    Location locSignNew = newGrave.getLoc();                   
+                    BlockType blockType = newGrave.getBlockTypeSet();
+                    
                     entities.stream().forEach((Entity entity) -> {
                         itemContainers.add(entity.getValue(Keys.REPRESENTED_ITEM).get().get().toContainer());
                     });
@@ -117,7 +124,7 @@ public class EventDropItem {
 
                     int playerId = DataBase.getPlayerId(player);
                     String executeInGrave = ("insert into graves(player_id, world_name, coord_x, coord_y, coord_z) values (%s, '%s', %s, %s, %s);");
-                    String executeFormatInGrave = String.format(executeInGrave, playerId, world.getName(), LocSign.getBlockX(), LocSign.getBlockY(), LocSign.getBlockZ());
+                    String executeFormatInGrave = String.format(executeInGrave, playerId, world.getName(), locSignNew.getBlockX(), locSignNew.getBlockY(), locSignNew.getBlockZ());
 
                     DataBase.execute(executeFormatInGrave);
 
@@ -130,24 +137,21 @@ public class EventDropItem {
                         DataBase.execute(executeInItems);
                     });
 
-                    try {
-                        LocSign.setBlock(BlockTypes.WALL_SIGN.getDefaultState().with(Keys.DIRECTION, SOUTH).get());
+                    if (blockType != null){
+                        locSignNew.setBlock(blockType.getDefaultState().with(Keys.DIRECTION, SOUTH).get());
 
-                        TileEntity tile = (TileEntity) LocSign.getTileEntity().get();
+                        TileEntity tile = (TileEntity) locSignNew.getTileEntity().get();
                         Text line0 = Texts.of(TextColors.DARK_RED, "[grave]");
                         Text line1 = Texts.of(player.getName());
                         Text line2 = Texts.of(TextColors.DARK_GREEN, "#" + lastGrave);
                         dataofsign.setLines(tile, line0, line1, line2, null);
 
                         msgDied = Texts.of(TextColors.DARK_GREEN, "Your grave is in " + world.getName() + " | "
-                                + LocSign.getBlockX() + " | "
-                                + LocSign.getBlockY() + " | "
-                                + LocSign.getBlockZ() + ".");
+                                + locSignNew.getBlockX() + " | "
+                                + locSignNew.getBlockY() + " | "
+                                + locSignNew.getBlockZ() + ".");
                         player.sendMessage(msgDied);
-                    } catch (PositionOutOfBoundsException e) {
-                        player.sendMessages(noGrave);
                     }
-
                 }
             }
         } else {

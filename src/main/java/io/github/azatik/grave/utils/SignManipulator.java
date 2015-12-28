@@ -51,7 +51,7 @@ public class SignManipulator {
     
     public ArrayList<String> getLines(SignData signdata) {
         List<Text> textSignLines = signdata.getValue(Keys.SIGN_LINES).get().getAll();
-
+        
         Texts.toPlain(textSignLines.get(0));
 
         ArrayList<String> stringSignLines = new ArrayList();
@@ -64,8 +64,10 @@ public class SignManipulator {
     }
     
     public ArrayList<String> getLines(ImmutableSignData signdata) {
-        List<Text> textSignLines = signdata.getValue(Keys.SIGN_LINES).get().getAll();
-
+        //List<Text> textSignLines = signdata.getValue(Keys.SIGN_LINES).get().getAll();
+        
+        List<Text> textSignLines = signdata.lines().get();
+        
         Texts.toPlain(textSignLines.get(0));
 
         ArrayList<String> stringSignLines = new ArrayList();

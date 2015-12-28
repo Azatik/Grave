@@ -31,9 +31,9 @@ import io.github.azatik.grave.commands.TestCmd;
 import org.spongepowered.api.plugin.Plugin;
 import org.slf4j.Logger;
 import io.github.azatik.grave.database.DataBase;
+import io.github.azatik.grave.events.EventChangeGrave;
 import io.github.azatik.grave.events.EventChangeSign;
 import io.github.azatik.grave.events.EventDropItem;
-import io.github.azatik.grave.events.EventFlySign;
 import io.github.azatik.grave.events.EventRightClickGrave;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -80,10 +80,9 @@ public class Grave {
     public void onGameInit(GameInitializationEvent event) {
         eventManager.registerListeners(this, new EventDropItem());        
         eventManager.registerListeners(this, new EventChangeSign());
-        eventManager.registerListeners(this, new EventRightClickGrave());
-        eventManager.registerListeners(this, new EventFlySign());
+        eventManager.registerListeners(this, new EventRightClickGrave());      
         //eventManager.registerListeners(this, new EventDropItemCauseTest());
-        //eventManager.registerListeners(this, new EventChangeGrave());        
+        eventManager.registerListeners(this, new EventChangeGrave());        
         //eventManager.registerListeners(this, new EventInteractSign());
         
         registerCommands();

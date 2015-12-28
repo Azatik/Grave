@@ -1,5 +1,5 @@
 /*
- * This file is part of Grave, licensed under the MIT License (MIT).
+ * This file is part of SpongeAPI, licensed under the MIT License (MIT).
  *
  * Copyright (c) Azatik <http://azatik.github.io>
  * Copyright (c) contributors
@@ -22,19 +22,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.github.azatik.grave.events;
+package io.github.azatik.grave.utils;
 
-import org.spongepowered.api.block.BlockTypes;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.block.BlockType;
+import org.spongepowered.api.world.Location;
 
-public class EventFlySign {
-    @Listener //(ignoreCancelled=false, order = BEFORE_POST)
-    public void onFlySign(ChangeBlockEvent.Modify event) {  
-        event.getTransactions().stream().forEach((trans) -> {
-                if (trans.getOriginal().getState().getType().equals(BlockTypes.WALL_SIGN)) {
-                    event.setCancelled(true);              
-                }});
-        
+public class LogicClass {
+    private Location location;
+    private BlockType blockTypeSet;
+    
+    public Location getLoc(){
+        return location;
+    }
+    
+    public void setLoc(Location location){
+        this.location = location;
+    }
+    
+    public BlockType getBlockTypeSet(){
+        return blockTypeSet;
+    }
+    
+    public void setBlockTypeSet(BlockType blockType){
+        this.blockTypeSet = blockType;
     }
 }
