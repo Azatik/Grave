@@ -31,7 +31,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.tileentity.ChangeSignEvent;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 
 public class EventChangeSign {
@@ -48,7 +47,7 @@ public class EventChangeSign {
             ArrayList<String> lines = dataofsign.getLines(signData);
             String line0 = lines.get(0).toLowerCase();
             if (line0.equals("[grave]") && !player.hasPermission("grave.createsigngrave")) {
-                msg1 = Texts.of(TextColors.DARK_RED, "Ты не можешь создать могилу!");
+                msg1 = Text.of(TextColors.DARK_RED, "Ты не можешь создать могилу!");
                 player.sendMessages(msg1);
                 event.setCancelled(true);
             }
@@ -58,7 +57,7 @@ public class EventChangeSign {
 
             String OriginalLine0 = originalLines.get(0).toLowerCase();
             if (OriginalLine0.equals("[grave]") && !player.hasPermission("grave.changesigngrave")) {
-                msg1 = Texts.of(TextColors.DARK_RED, "Ты не можешь изменить могилу!");
+                msg1 = Text.of(TextColors.DARK_RED, "Ты не можешь изменить могилу!");
                 player.sendMessages(msg1);
                 event.setCancelled(true);
 

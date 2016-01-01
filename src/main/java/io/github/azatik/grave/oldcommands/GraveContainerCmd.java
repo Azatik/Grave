@@ -36,7 +36,7 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 public class GraveContainerCmd implements CommandExecutor {
@@ -56,9 +56,9 @@ public class GraveContainerCmd implements CommandExecutor {
             //stack.setRawData(cont);
             
         } else if (src instanceof ConsoleSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
         } else if (src instanceof CommandBlockSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
         }
         return CommandResult.success();
     }

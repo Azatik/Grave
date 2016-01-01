@@ -37,7 +37,6 @@ import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
@@ -68,12 +67,12 @@ public class TestCmd implements CommandExecutor {
             
             location.setBlockType(BlockTypes.STANDING_SIGN);
             TileEntity tile = (TileEntity) location.getTileEntity().get();
-            Text line0 = Texts.of(TextColors.DARK_RED, "[grave]");
+            Text line0 = Text.of(TextColors.DARK_RED, "[grave]");
             dataofsign.setLines(tile, line0, null, null, null);
         } else if (src instanceof ConsoleSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
         } else if (src instanceof CommandBlockSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
         }
         return CommandResult.success();
     }

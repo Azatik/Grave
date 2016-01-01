@@ -51,7 +51,6 @@ import org.spongepowered.api.event.cause.Cause;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.service.sql.SqlService;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 
@@ -188,7 +187,7 @@ public class DataBase {
             }
         });
         if (counterError != 0) {
-            player.sendMessages(Texts.of(TextColors.RED, "Не образовалось " + counterError + " предметов, так как они больше не существуют."));
+            player.sendMessages(Text.of(TextColors.RED, "Не образовалось " + counterError + " предметов, так как они больше не существуют."));
             counterError = 0;
         }
 
@@ -242,12 +241,12 @@ public class DataBase {
             
             Text ElementRs;
             while (rsGraves.next()) {
-                ElementRs = Texts.of(TextColors.YELLOW, "#" + rsGraves.getString("graves.id") + " | " + rsGraves.getString("players.name") + " | " + rsGraves.getString("graves.world_name") + " | " + rsGraves.getInt("graves.coord_x") + " | " + rsGraves.getInt("graves.coord_y") + " | " + rsGraves.getInt("graves.coord_z"));
+                ElementRs = Text.of(TextColors.YELLOW, "#" + rsGraves.getString("graves.id") + " | " + rsGraves.getString("players.name") + " | " + rsGraves.getString("graves.world_name") + " | " + rsGraves.getInt("graves.coord_x") + " | " + rsGraves.getInt("graves.coord_y") + " | " + rsGraves.getInt("graves.coord_z"));
                 graves.add(ElementRs);
             }
             rsGraves.close();        
         } else {
-            Text errorMsg = Texts.of(TextColors.RED, "Игрока " + player + " нет в базе.");
+            Text errorMsg = Text.of(TextColors.RED, "Игрока " + player + " нет в базе.");
             graves.add(errorMsg);
         }
 

@@ -39,7 +39,6 @@ import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 
 public class GraveShowCmd implements CommandExecutor {
@@ -55,19 +54,19 @@ public class GraveShowCmd implements CommandExecutor {
                         String strPlayerName = playerArg.get();
                         ArrayList<Text> graves = DataBase.getGraves(strPlayerName);
                         if (!graves.isEmpty()){
-                            player.sendMessages(Texts.of(TextColors.BLUE, "=== # | Имя игрока | Имя мира | x | y | z ==="));
+                            player.sendMessages(Text.of(TextColors.BLUE, "=== # | Имя игрока | Имя мира | x | y | z ==="));
                             player.sendMessages(graves);
-                            player.sendMessages(Texts.of(TextColors.BLUE, "=================(конец)================="));
+                            player.sendMessages(Text.of(TextColors.BLUE, "=================(конец)================="));
                         }
                         else {
-                            player.sendMessages(Texts.of(TextColors.GREEN, "У игрока " + strPlayerName +  " нет могил!"));
+                            player.sendMessages(Text.of(TextColors.GREEN, "У игрока " + strPlayerName +  " нет могил!"));
                         }                      
                         return CommandResult.success();
                     } catch (SQLException ex) {
                         Logger.getLogger(GraveShowCmd.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } else {
-                    Text texts = Texts.of(TextColors.DARK_RED, "У тебя нет прав на выполнение этой команды!");
+                    Text texts = Text.of(TextColors.DARK_RED, "У тебя нет прав на выполнение этой команды!");
                     player.sendMessages(texts);
                 }
                 return CommandResult.success();
@@ -76,20 +75,20 @@ public class GraveShowCmd implements CommandExecutor {
                     String name = player.getName();
                     ArrayList<Text> graves = DataBase.getGraves(name);
                     if (!graves.isEmpty()) {
-                        player.sendMessages(Texts.of(TextColors.BLUE, "=== # | Имя игрока | Имя мира | x | y | z ==="));
+                        player.sendMessages(Text.of(TextColors.BLUE, "=== # | Имя игрока | Имя мира | x | y | z ==="));
                         player.sendMessages(graves);
-                        player.sendMessages(Texts.of(TextColors.BLUE, "=================(конец)================="));
+                        player.sendMessages(Text.of(TextColors.BLUE, "=================(конец)================="));
                     } else {
-                        player.sendMessages(Texts.of(TextColors.GREEN, "У тебя нет могил!"));
+                        player.sendMessages(Text.of(TextColors.GREEN, "У тебя нет могил!"));
                     }
                 } catch (SQLException ex) {
                     Logger.getLogger(GraveShowCmd.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         } else if (src instanceof ConsoleSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
         } else if (src instanceof CommandBlockSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
         }
         return CommandResult.success();
     }

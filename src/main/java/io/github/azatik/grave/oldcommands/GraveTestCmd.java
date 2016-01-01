@@ -34,7 +34,6 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 
 public class GraveTestCmd implements CommandExecutor {
@@ -52,14 +51,14 @@ public class GraveTestCmd implements CommandExecutor {
             if (args.hasAny("item")){
                 ItemStackSnapshot itemSnapshot = player.getItemInHand().get().createSnapshot();
                 String itemContainer = itemSnapshot.toContainer().toString();
-                Text msgPlayer = Texts.of(TextColors.GREEN, "ItemContainer:" + "\n", TextColors.WHITE, itemContainer);
+                Text msgPlayer = Text.of(TextColors.GREEN, "ItemContainer:" + "\n", TextColors.WHITE, itemContainer);
                 player.sendMessage(msgPlayer);
             }
             
         } else if (src instanceof ConsoleSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
         } else if (src instanceof CommandBlockSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
         }
         return CommandResult.success();
     }

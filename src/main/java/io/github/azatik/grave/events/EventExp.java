@@ -29,7 +29,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.HarvestEntityEvent;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 
 public class EventExp {   
     //this event not implements
@@ -44,7 +43,7 @@ public class EventExp {
         int originalExperience = event.getOriginalExperience();
         int experience = event.getExperience();
         
-        Text msg = Texts.of("Old XP = " + originalExperience + ", New XP = " + experience);
+        Text msg = Text.of("Old XP = " + originalExperience + ", New XP = " + experience);
         player.sendMessage(msg);
     }
 }

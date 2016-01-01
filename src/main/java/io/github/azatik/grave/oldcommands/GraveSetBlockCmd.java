@@ -37,7 +37,6 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import static org.spongepowered.api.util.Direction.SOUTH;
 import org.spongepowered.api.util.PositionOutOfBoundsException;
@@ -61,24 +60,24 @@ public class GraveSetBlockCmd implements CommandExecutor {
             try {
                 location.setBlockType(BlockTypes.STONE);
                 location2.setBlock(BlockTypes.WALL_SIGN.getDefaultState().with(Keys.DIRECTION, SOUTH).get());
-                Text msgPlayer = Texts.of(TextColors.DARK_GREEN, "Block set");
+                Text msgPlayer = Text.of(TextColors.DARK_GREEN, "Block set");
                 player.sendMessage(msgPlayer);
                 
                 TileEntity tile = (TileEntity) location2.getTileEntity().get();
-                    Text line0 = Texts.of(TextColors.DARK_RED, "[Grave]");
-                    Text line1 = Texts.of(player.getName());
-                    Text line2 = Texts.of(TextColors.DARK_GREEN, "#x");
+                    Text line0 = Text.of(TextColors.DARK_RED, "[Grave]");
+                    Text line1 = Text.of(player.getName());
+                    Text line2 = Text.of(TextColors.DARK_GREEN, "#x");
                     dataofsign.setLines(tile, line0, line1, line2, null);
                 
             } catch (PositionOutOfBoundsException e) {
-                Text msgPlayer2 = Texts.of(TextColors.DARK_RED, "Block NOT set");
+                Text msgPlayer2 = Text.of(TextColors.DARK_RED, "Block NOT set");
                 player.sendMessages(msgPlayer2);
             }
             
         } else if (src instanceof ConsoleSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
         } else if (src instanceof CommandBlockSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
         }
         return CommandResult.success();
     }

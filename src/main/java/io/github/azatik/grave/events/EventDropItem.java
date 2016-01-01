@@ -52,7 +52,6 @@ import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.event.cause.entity.damage.source.IndirectEntityDamageSource;
 import org.spongepowered.api.event.item.inventory.DropItemEvent;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import static org.spongepowered.api.util.Direction.SOUTH;
 import org.spongepowered.api.world.Location;
@@ -63,7 +62,7 @@ public class EventDropItem {
     @Listener
     public void onDropItem(DropItemEvent.Destruct event) throws SQLException, IOException {
         Text msgDied;
-        Text noGrave = Texts.of(TextColors.DARK_RED, "Могила не образовалась по какой-то причине." + "\n"
+        Text noGrave = Text.of(TextColors.DARK_RED, "Могила не образовалась по какой-то причине." + "\n"
                 + "Ты можешь её восстановить командой /grave repair [# могилы]");
         
         SignManipulator dataofsign = new SignManipulator();
@@ -140,12 +139,12 @@ public class EventDropItem {
                         locSignNew.setBlock(blockType.getDefaultState().with(Keys.DIRECTION, SOUTH).get());
 
                         TileEntity tile = (TileEntity) locSignNew.getTileEntity().get();
-                        Text line0 = Texts.of(TextColors.DARK_RED, "[grave]");
-                        Text line1 = Texts.of(player.getName());
-                        Text line2 = Texts.of(TextColors.DARK_GREEN, "#" + lastGrave);
+                        Text line0 = Text.of(TextColors.DARK_RED, "[grave]");
+                        Text line1 = Text.of(player.getName());
+                        Text line2 = Text.of(TextColors.DARK_GREEN, "#" + lastGrave);
                         dataofsign.setLines(tile, line0, line1, line2, null);
 
-                        msgDied = Texts.of(TextColors.DARK_GREEN, "Your grave is in " + world.getName() + " | "
+                        msgDied = Text.of(TextColors.DARK_GREEN, "Your grave is in " + world.getName() + " | "
                                 + locSignNew.getBlockX() + " | "
                                 + locSignNew.getBlockY() + " | "
                                 + locSignNew.getBlockZ() + ".");

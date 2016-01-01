@@ -16,7 +16,7 @@ import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 public class GraveGetCmd implements CommandExecutor {
@@ -32,7 +32,7 @@ public class GraveGetCmd implements CommandExecutor {
                     
                     DataBase.materializeItems(graveNumberInt, player.getLocation(), player);
                     
-                    player.sendMessages(Texts.of(TextColors.GOLD, "Материализовалась могила #" + graveNumberInt));
+                    player.sendMessages(Text.of(TextColors.GOLD, "Материализовалась могила #" + graveNumberInt));
                     return CommandResult.success();
                 } catch (SQLException | IOException ex) {
                     Logger.getLogger(GraveGetCmd.class.getName()).log(Level.SEVERE, null, ex);
@@ -40,9 +40,9 @@ public class GraveGetCmd implements CommandExecutor {
             }
             
         } else if (src instanceof ConsoleSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
         } else if (src instanceof CommandBlockSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
         }
         return CommandResult.success();
     }

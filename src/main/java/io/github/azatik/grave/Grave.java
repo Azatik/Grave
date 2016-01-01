@@ -52,7 +52,7 @@ import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
 import org.spongepowered.api.plugin.PluginManager;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 
 @Plugin(id = Grave.PLUGIN_ID, name = Grave.PLUGIN_NAME, version = Grave.PLUGIN_VERSION)
 public class Grave {
@@ -181,19 +181,19 @@ public class Grave {
                 game.getCommandManager().register(this, jsonCommand, "json");*/
         
         CommandSpec graveHelpCommand = CommandSpec.builder()
-                .description(Texts.of("help command"))
+                .description(Text.of("help command"))
                 .permission("grave.help")
                 .executor(new GraveHelpCmd())
                 .build();
         
         CommandSpec graveShowCommand = CommandSpec.builder()
-                .description(Texts.of("This command show your graves"))
+                .description(Text.of("This command show your graves"))
                 .permission("grave.show")
-                .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("player"))))
+                .arguments(GenericArguments.optional(GenericArguments.string(Text.of("player"))))
                 .executor(new GraveShowCmd()).build();
         
         CommandSpec graveCommand = CommandSpec.builder()
-                .description(Texts.of("essentials command"))
+                .description(Text.of("essentials command"))
                 .permission("grave.command")
                 .executor(new GraveCmd())
                 .child(graveHelpCommand, "help")
@@ -202,7 +202,7 @@ public class Grave {
         game.getCommandManager().register(this, graveCommand, "grave");
         
         CommandSpec testCommand = CommandSpec.builder()
-                .description(Texts.of("test command"))
+                .description(Text.of("test command"))
                 .permission("test.command")
                 .executor(new TestCmd())
                 .build();

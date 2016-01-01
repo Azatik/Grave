@@ -40,7 +40,6 @@ import static org.spongepowered.api.event.Order.BEFORE_POST;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
 import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.util.Tristate;
 
@@ -74,7 +73,7 @@ public class EventBreakGrave {
                             } catch (SQLException | IOException ex) {
                                 Logger.getLogger(EventBreakGrave.class.getName()).log(Level.SEVERE, null, ex);
                             }
-                            Text msgID = Texts.of(TextColors.GRAY, "Materialize grave #" + IDGrave);
+                            Text msgID = Text.of(TextColors.GRAY, "Materialize grave #" + IDGrave);
                             player.sendMessages(msgID);
                             event.setCancelled(false);
                         }

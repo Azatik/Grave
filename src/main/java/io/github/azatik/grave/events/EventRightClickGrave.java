@@ -35,7 +35,6 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
 
@@ -55,7 +54,7 @@ public class EventRightClickGrave {
                     if (signLines.get(2).contains("#")) {
                         int IDGrave = Integer.parseInt(signLines.get(2).replace("#", ""));
                         DataBase.materializeItems(IDGrave, location, player);
-                        Text msgID = Texts.of(TextColors.GRAY, "Материализовалась могила #" + IDGrave);
+                        Text msgID = Text.of(TextColors.GRAY, "Материализовалась могила #" + IDGrave);
                         player.sendMessages(msgID);
                     }
                 }

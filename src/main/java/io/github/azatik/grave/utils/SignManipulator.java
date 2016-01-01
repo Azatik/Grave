@@ -31,50 +31,45 @@ import org.spongepowered.api.data.key.Keys;
 import org.spongepowered.api.data.manipulator.immutable.tileentity.ImmutableSignData;
 import org.spongepowered.api.data.manipulator.mutable.tileentity.SignData;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 public class SignManipulator {  
     public ArrayList<String> getLines(TileEntity sign) {
         SignData signdata = sign.get(SignData.class).get();
-        List<Text> textSignLines = signdata.getValue(Keys.SIGN_LINES).get().getAll();
-        
-        Texts.toPlain(textSignLines.get(0));
+        //List<Text> textSignLines = signdata.getValue(Keys.SIGN_LINES).get().getAll();
+        List<Text> textSignLines = signdata.lines().get();
         
         ArrayList<String> stringSignLines = new ArrayList();
-        stringSignLines.add(Texts.toPlain(textSignLines.get(0)));
-        stringSignLines.add(Texts.toPlain(textSignLines.get(1)));
-        stringSignLines.add(Texts.toPlain(textSignLines.get(2)));
-        stringSignLines.add(Texts.toPlain(textSignLines.get(3)));
+        stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(0)));
+        stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(1)));
+        stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(2)));
+        stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(3)));
         
         return stringSignLines;
 }
     
     public ArrayList<String> getLines(SignData signdata) {
-        List<Text> textSignLines = signdata.getValue(Keys.SIGN_LINES).get().getAll();
+        //List<Text> textSignLines = signdata.getValue(Keys.SIGN_LINES).get().getAll();
+        List<Text> textSignLines = signdata.lines().get();
         
-        Texts.toPlain(textSignLines.get(0));
-
         ArrayList<String> stringSignLines = new ArrayList();
-        stringSignLines.add(Texts.toPlain(textSignLines.get(0)));
-        stringSignLines.add(Texts.toPlain(textSignLines.get(1)));
-        stringSignLines.add(Texts.toPlain(textSignLines.get(2)));
-        stringSignLines.add(Texts.toPlain(textSignLines.get(3)));
+        stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(0)));
+        stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(1)));
+        stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(2)));
+        stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(3)));
 
         return stringSignLines;
     }
     
     public ArrayList<String> getLines(ImmutableSignData signdata) {
-        //List<Text> textSignLines = signdata.getValue(Keys.SIGN_LINES).get().getAll();
-        
+        //List<Text> textSignLines = signdata.getValue(Keys.SIGN_LINES).get().getAll();      
         List<Text> textSignLines = signdata.lines().get();
-        
-        Texts.toPlain(textSignLines.get(0));
 
         ArrayList<String> stringSignLines = new ArrayList();
-        stringSignLines.add(Texts.toPlain(textSignLines.get(0)));
-        stringSignLines.add(Texts.toPlain(textSignLines.get(1)));
-        stringSignLines.add(Texts.toPlain(textSignLines.get(2)));
-        stringSignLines.add(Texts.toPlain(textSignLines.get(3)));
+        stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(0)));
+        stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(1)));
+        stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(2)));
+        stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(3)));
 
         return stringSignLines;
     }

@@ -13,9 +13,8 @@ import org.spongepowered.api.data.DataContainer;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
-import org.spongepowered.api.text.title.Titles;
+import org.spongepowered.api.text.title.Title;
 
 //This testing class
 
@@ -37,13 +36,13 @@ public class CommandMsg implements CommandCallable {
             final String[] args = arguments.split(" ");
                 
             if (arguments.isEmpty()) {
-                Text emptyMsg = Texts.of(TextColors.DARK_GREEN, "Empty Command");
+                Text emptyMsg = Text.of(TextColors.DARK_GREEN, "Empty Command");
                 player.sendMessage(emptyMsg);
             }
             if ("title".equals(args[0])) {
-                Text title = Texts.of(TextColors.GOLD, "Wild Life");
-                Text subTitle = Texts.of(TextColors.GOLD, "Welcome aboard, " + player.getName());                
-                player.sendTitle(Titles.of(title, subTitle));
+                Text title = Text.of(TextColors.GOLD, "Wild Life");
+                Text subTitle = Text.of(TextColors.GOLD, "Welcome aboard, " + player.getName());                
+                player.sendTitle(Title.of(title, subTitle));
                 
                 try {
                     TimeUnit.SECONDS.sleep(15);
@@ -62,7 +61,7 @@ public class CommandMsg implements CommandCallable {
             if ("item".equals(args[0])) {
                 ItemStack is = player.getItemInHand().get();
                 DataContainer toContainer = is.toContainer();
-                Text msg3 = Texts.of(toContainer);
+                Text msg3 = Text.of(toContainer);
                 player.sendMessage(msg3);
             }
         }

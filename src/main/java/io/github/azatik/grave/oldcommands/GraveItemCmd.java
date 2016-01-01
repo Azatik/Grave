@@ -52,7 +52,6 @@ import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 
 public class GraveItemCmd implements CommandExecutor {
@@ -66,7 +65,7 @@ public class GraveItemCmd implements CommandExecutor {
                 ItemStackSnapshot itemSnapshot = player.getItemInHand().get().createSnapshot();
                 String itemContainer = itemSnapshot.toContainer().toString();
                 DataContainer toContainer = itemSnapshot.toContainer();
-                Text msgPlayer = Texts.of(TextColors.GREEN, "ItemContainer:" + "\n", TextColors.WHITE, itemContainer);
+                Text msgPlayer = Text.of(TextColors.GREEN, "ItemContainer:" + "\n", TextColors.WHITE, itemContainer);
                 player.sendMessage(msgPlayer);
                 
                 FileWriter writeFile = null;
@@ -94,14 +93,14 @@ public class GraveItemCmd implements CommandExecutor {
                     item.offer(Keys.REPRESENTED_ITEM, stack.createSnapshot());
                     player.getWorld().spawnEntity(item, Cause.of(player));
                 }
-                Text msgPlayer = Texts.of(TextColors.GREEN, "Предмет дропнулся.");
+                Text msgPlayer = Text.of(TextColors.GREEN, "Предмет дропнулся.");
                 player.sendMessage(msgPlayer);
 
             }
         } else if (src instanceof ConsoleSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
         } else if (src instanceof CommandBlockSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
         }
         return CommandResult.success();
     }

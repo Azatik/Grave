@@ -34,7 +34,6 @@ import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 
 public class GraveShowCmd implements CommandExecutor {
@@ -48,22 +47,22 @@ public class GraveShowCmd implements CommandExecutor {
 
                     String stringPlayerName = playerName.get();
 
-                    Text msgPlayer = Texts.of(TextColors.GREEN, "Ты хочешь получить все могилы игрока " + stringPlayerName + ".");
+                    Text msgPlayer = Text.of(TextColors.GREEN, "Ты хочешь получить все могилы игрока " + stringPlayerName + ".");
                     player.sendMessage(msgPlayer);
                     return CommandResult.success();
                 } else {
-                    Text texts = Texts.of(TextColors.DARK_RED, "У тебя нет прав на выполнение этой команды!");
+                    Text texts = Text.of(TextColors.DARK_RED, "У тебя нет прав на выполнение этой команды!");
                     player.sendMessages(texts);
                 }
             }
             String name = player.getName();
 
-            Text msgPlayer = Texts.of(TextColors.GREEN, "Ты, " + name + ", хочешь получить все свои могилы.");
+            Text msgPlayer = Text.of(TextColors.GREEN, "Ты, " + name + ", хочешь получить все свои могилы.");
             player.sendMessage(msgPlayer);
         } else if (src instanceof ConsoleSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
         } else if (src instanceof CommandBlockSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
         }
         return CommandResult.success();
     }

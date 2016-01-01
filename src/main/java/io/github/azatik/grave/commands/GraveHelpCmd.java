@@ -29,7 +29,7 @@ import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
-import org.spongepowered.api.text.Texts;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 public class GraveHelpCmd implements CommandExecutor {
@@ -37,9 +37,9 @@ public class GraveHelpCmd implements CommandExecutor {
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 
-        src.sendMessage(Texts.of(TextColors.DARK_GREEN, "=======Помощь по \"Grave\"======="));        
-        src.sendMessage(Texts.of(TextColors.DARK_AQUA, "1) grave show ", TextColors.DARK_GREEN, "= показывает твои могилы"));
-        src.sendMessage(Texts.of(TextColors.DARK_AQUA, "2) grave show [player] ", TextColors.DARK_GREEN, "= показывает могилы определённого игрока"));
+        src.sendMessage(Text.of(TextColors.DARK_GREEN, "=======Помощь по \"Grave\"======="));        
+        src.sendMessage(Text.of(TextColors.DARK_AQUA, "1) grave show ", TextColors.DARK_GREEN, "= показывает твои могилы"));
+        src.sendMessage(Text.of(TextColors.DARK_AQUA, "2) grave show [player] ", TextColors.DARK_GREEN, "= показывает могилы определённого игрока"));
         return CommandResult.success();
     }
 }

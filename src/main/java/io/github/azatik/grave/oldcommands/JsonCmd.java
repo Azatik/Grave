@@ -54,7 +54,6 @@ import org.spongepowered.api.data.translator.ConfigurateTranslator;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.item.inventory.ItemStackSnapshot;
 import org.spongepowered.api.text.Text;
-import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 
 public class JsonCmd implements CommandExecutor {
@@ -69,7 +68,7 @@ public class JsonCmd implements CommandExecutor {
                 ItemStackSnapshot itemSnapshot = player.getItemInHand().get().createSnapshot();
                 DataContainer dataContainer = itemSnapshot.toContainer();
                 
-                Text msg1ContainerName = Texts.of(TextColors.YELLOW, "First container: " + dataContainer.toString());
+                Text msg1ContainerName = Text.of(TextColors.YELLOW, "First container: " + dataContainer.toString());
                 player.sendMessage(msg1ContainerName);
                 
                 StringWriter writer = new StringWriter();
@@ -83,7 +82,7 @@ public class JsonCmd implements CommandExecutor {
                 
                 //String in DataBase
                 String stringDB = writer.toString();
-                Text stringDBMsg = Texts.of(TextColors.YELLOW, "String DB: " + stringDB);
+                Text stringDBMsg = Text.of(TextColors.YELLOW, "String DB: " + stringDB);
                 player.sendMessage(stringDBMsg);
                 ArrayList<String> one = new ArrayList();
                 one.add(stringDB);
@@ -91,13 +90,13 @@ public class JsonCmd implements CommandExecutor {
                 
                 Gson gson = new GsonBuilder().create();
                 String toJson = gson.toJson(one);
-                Text toJsonMsg = Texts.of(TextColors.AQUA, "Serialize: " + toJson);
+                Text toJsonMsg = Text.of(TextColors.AQUA, "Serialize: " + toJson);
                 player.sendMessage(toJsonMsg);
                 
                 Type type = new TypeToken<List<String>>() {
                 }.getType();
                 ArrayList<String> desOne = gson.fromJson(toJson,type);
-                Text fromJsonMsg = Texts.of(TextColors.AQUA, "Deserialize: " + desOne.get(0));
+                Text fromJsonMsg = Text.of(TextColors.AQUA, "Deserialize: " + desOne.get(0));
                 player.sendMessage(fromJsonMsg);
                 //Reader
                 StringReader reader = new StringReader(stringDB);
@@ -109,7 +108,7 @@ public class JsonCmd implements CommandExecutor {
                 }).build().load());
                 
                 DataContainer container = view.getContainer();
-                Text msg2ContainerName = Texts.of(TextColors.YELLOW, "Second container: " + container.toString());
+                Text msg2ContainerName = Text.of(TextColors.YELLOW, "Second container: " + container.toString());
                 player.sendMessage(msg2ContainerName);
             } catch (IOException ex) {
                 Logger.getLogger(JsonCmd.class.getName()).log(Level.SEVERE, null, ex);
@@ -117,9 +116,9 @@ public class JsonCmd implements CommandExecutor {
             
             
         } else if (src instanceof ConsoleSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
         } else if (src instanceof CommandBlockSource) {
-            src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
+            src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave item!"));
         }
         return CommandResult.success();
     }
