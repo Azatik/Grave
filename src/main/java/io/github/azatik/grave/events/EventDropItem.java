@@ -55,7 +55,6 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import static org.spongepowered.api.util.Direction.SOUTH;
-import org.spongepowered.api.util.PositionOutOfBoundsException;
 import org.spongepowered.api.world.Location;
 import org.spongepowered.api.world.World;
 
@@ -66,7 +65,7 @@ public class EventDropItem {
         Text msgDied;
         Text noGrave = Texts.of(TextColors.DARK_RED, "Могила не образовалась по какой-то причине." + "\n"
                 + "Ты можешь её восстановить командой /grave repair [# могилы]");
-
+        
         SignManipulator dataofsign = new SignManipulator();
         List<Entity> entities = event.getEntities();
         ArrayList<DataContainer> itemContainers = new ArrayList();
@@ -151,6 +150,8 @@ public class EventDropItem {
                                 + locSignNew.getBlockY() + " | "
                                 + locSignNew.getBlockZ() + ".");
                         player.sendMessage(msgDied);
+                    } else {
+                        player.sendMessage(noGrave);
                     }
                 }
             }

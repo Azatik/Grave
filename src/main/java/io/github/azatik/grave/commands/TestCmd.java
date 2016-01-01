@@ -25,6 +25,9 @@
 package io.github.azatik.grave.commands;
 
 import static io.github.azatik.grave.utils.MatterCheck.BlockIsSolid;
+import io.github.azatik.grave.utils.SignManipulator;
+import org.spongepowered.api.block.BlockTypes;
+import org.spongepowered.api.block.tileentity.TileEntity;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -33,6 +36,7 @@ import org.spongepowered.api.command.source.CommandBlockSource;
 import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
@@ -44,9 +48,8 @@ public class TestCmd implements CommandExecutor {
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         if (src instanceof Player) {
             Player player = (Player) src;
-            World world = player.getWorld();
             Location<World> location = player.getLocation();
-            Location locationSurface = new Location(world, location.getBlockX(), location.getBlockY() - 1, location.getBlockZ());
+            /*Location locationSurface = new Location(world, location.getBlockX(), location.getBlockY() - 1, location.getBlockZ());
             boolean isSolid = BlockIsSolid(location);
             boolean isSolidSurface = BlockIsSolid(locationSurface);
             if (isSolid) {
@@ -59,7 +62,14 @@ public class TestCmd implements CommandExecutor {
                 player.sendMessage(Texts.of("Под тобой твёрдый блок"));
             } else {
                 player.sendMessage(Texts.of("Под тобой НЕ твёрдый блок"));
-            }
+            }*/
+            
+            SignManipulator dataofsign = new SignManipulator();
+            
+            location.setBlockType(BlockTypes.STANDING_SIGN);
+            TileEntity tile = (TileEntity) location.getTileEntity().get();
+            Text line0 = Texts.of(TextColors.DARK_RED, "[grave]");
+            dataofsign.setLines(tile, line0, null, null, null);
         } else if (src instanceof ConsoleSource) {
             src.sendMessage(Texts.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
         } else if (src instanceof CommandBlockSource) {

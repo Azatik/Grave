@@ -25,21 +25,30 @@
 package io.github.azatik.grave.events;
 
 import io.github.azatik.grave.Grave;
+import io.github.azatik.grave.database.DataBase;
 import io.github.azatik.grave.utils.SignManipulator;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.data.manipulator.immutable.tileentity.ImmutableSignData;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
+import static org.spongepowered.api.event.Order.BEFORE_POST;
 import org.spongepowered.api.event.block.ChangeBlockEvent;
+import org.spongepowered.api.event.filter.IsCancelled;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.Texts;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.util.Tristate;
 
-public class EventChangeGrave {
+public class EventBreakGrave {
 
-    @Listener //(ignoreCancelled=false, order = BEFORE_POST)
-    public void onChangeGrave(ChangeBlockEvent.Break event) {
+    @Listener (order = BEFORE_POST)
+    @IsCancelled(Tristate.UNDEFINED)
+    public void onBreakGrave(ChangeBlockEvent.Break event) {
         boolean causeOut = false;
         if (causeOut) {
             Grave.getInstance().getLogger().info(event.getCause().toString());
@@ -47,43 +56,29 @@ public class EventChangeGrave {
         boolean playerCause = event.getCause().first(Player.class).isPresent();
         if (playerCause) {
             Player player = event.getCause().first(Player.class).get();
-            
-                    Text msg3 = Texts.of(TextColors.GRAY, "You do broke");
-                    player.sendMessages(msg3);
-            
+
             event.getTransactions().stream().forEach((trans) -> {
-                if (trans.getOriginal().getState().getType().equals(BlockTypes.WALL_SIGN)) {
+                if (trans.getOriginal().getState().getType().equals(BlockTypes.WALL_SIGN)
+                        || trans.getOriginal().getState().getType().equals(BlockTypes.STANDING_SIGN)) {
 
                     SignManipulator dataofsign = new SignManipulator();
-                    
+
                     ImmutableSignData iSignData = trans.getOriginal().get(ImmutableSignData.class).get();
                     ArrayList<String> signLines = dataofsign.getLines(iSignData);
-                    
-                    /*SignData signData = trans.getOriginal().getLocation().get().getOrCreate(SignData.class).get();
-                    ArrayList<String> signLines1 = dataofsign.getLines(signData);
-                    
-                    Text line0 = Texts.of(TextColors.GRAY, signLines1.get(0));                   
-                    
-                    player.sendMessages(line0);
 
                     if (signLines.get(0).equals("[grave]")) {
-                        if (signLines.get(2).contains("#")) {
+                        if (signLines.get(2).contains("#")) {                           
                             int IDGrave = Integer.parseInt(signLines.get(2).replace("#", ""));
-                            Text msgID = Texts.of(TextColors.GRAY, "Code grave: " + IDGrave);
+                            try {
+                                DataBase.materializeItems(IDGrave, trans.getOriginal().getLocation().get(), player);
+                            } catch (SQLException | IOException ex) {
+                                Logger.getLogger(EventBreakGrave.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            Text msgID = Texts.of(TextColors.GRAY, "Materialize grave #" + IDGrave);
                             player.sendMessages(msgID);
+                            event.setCancelled(false);
                         }
-                    }*/
-                    
-                    /*Location<World> location = trans.getOriginal().getLocation().get();
-                    Text msg = Texts.of(TextColors.GRAY, "You broke: " + location.getBlockType().getName());
-                    player.sendMessages(msg);*/
-                    
-                    /*ImmutableSignData data = trans.getOriginal().getOrCreate(ImmutableSignData.class).get();
-                    ArrayList<String> signLines = dataofsign.getLines(data);*/
-                    Text msg2 = Texts.of(TextColors.GRAY, "First Line: " + signLines.get(0));
-                    player.sendMessages(msg2);
-                    
-                    
+                    }
                 }
             });
         }

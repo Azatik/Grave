@@ -31,9 +31,13 @@ import io.github.azatik.grave.commands.TestCmd;
 import org.spongepowered.api.plugin.Plugin;
 import org.slf4j.Logger;
 import io.github.azatik.grave.database.DataBase;
-import io.github.azatik.grave.events.EventChangeGrave;
+import io.github.azatik.grave.events.EventBreakBlock;
+import io.github.azatik.grave.events.EventBreakGrave;
+import io.github.azatik.grave.events.EventProtectGrave;
 import io.github.azatik.grave.events.EventChangeSign;
 import io.github.azatik.grave.events.EventDropItem;
+import io.github.azatik.grave.events.EventDropSign;
+import io.github.azatik.grave.events.EventExp;
 import io.github.azatik.grave.events.EventRightClickGrave;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -47,6 +51,7 @@ import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.event.game.state.GamePreInitializationEvent;
 import org.spongepowered.api.event.game.state.GameStartingServerEvent;
 import org.spongepowered.api.event.game.state.GameStoppingServerEvent;
+import org.spongepowered.api.plugin.PluginManager;
 import org.spongepowered.api.text.Texts;
 
 @Plugin(id = Grave.PLUGIN_ID, name = Grave.PLUGIN_NAME, version = Grave.PLUGIN_VERSION)
@@ -78,12 +83,19 @@ public class Grave {
     
     @Listener
     public void onGameInit(GameInitializationEvent event) {
-        eventManager.registerListeners(this, new EventDropItem());        
+        eventManager.registerListeners(this, new EventDropItem());
+        eventManager.registerListeners(this, new EventBreakGrave());
         eventManager.registerListeners(this, new EventChangeSign());
-        eventManager.registerListeners(this, new EventRightClickGrave());      
+        //eventManager.registerListeners(this, new EventExp());      
+        //eventManager.registerListeners(this, new EventBreakProtectGrave());
+        //eventManager.registerListeners(this, new EventDropSign());
+        
+        //***test events
         //eventManager.registerListeners(this, new EventDropItemCauseTest());
-        eventManager.registerListeners(this, new EventChangeGrave());        
-        //eventManager.registerListeners(this, new EventInteractSign());
+        //eventManager.registerListeners(this, new EventBreakBlock());
+        
+        //***old events
+        //eventManager.registerListeners(this, new EventRightClickGrave()); 
         
         registerCommands();
         
