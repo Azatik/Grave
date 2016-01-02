@@ -1,7 +1,7 @@
 /*
  * This file is part of Grave, licensed under the MIT License (MIT).
  *
- * Copyright (c) Azatik <azatik.github.io>
+ * Copyright (c) Azatik <http://azatik.github.io>
  * Copyright (c) contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,6 +24,19 @@
  */
 package io.github.azatik.grave.messages;
 
-public class Localization {
-    
+import io.github.azatik.grave.configuration.ConfigManagerMsg;
+import java.util.HashMap;
+import java.util.Map;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+
+public class MsgKeys {
+
+    public static final String graveLocationKey = "graveLocation";
+    public static Map<String, String> messagesMap = new HashMap<String, String>();
+
+    public MsgKeys() {
+        ConfigManagerMsg fileMsg = new ConfigManagerMsg();
+        CommentedConfigurationNode config = fileMsg.getConfig();
+        messagesMap.put(graveLocationKey, config.getNode("Grave", graveLocationKey).getString());
+    }
 }

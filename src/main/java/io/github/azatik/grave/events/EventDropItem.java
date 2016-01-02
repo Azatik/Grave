@@ -27,6 +27,7 @@ package io.github.azatik.grave.events;
 import io.github.azatik.grave.Grave;
 import io.github.azatik.grave.database.DataBase;
 import static io.github.azatik.grave.database.DataBase.getLastGrave;
+import io.github.azatik.grave.messages.MsgKeys;
 import io.github.azatik.grave.utils.LogicClass;
 import io.github.azatik.grave.utils.LogicSetGrave;
 import io.github.azatik.grave.utils.SignManipulator;
@@ -61,7 +62,6 @@ public class EventDropItem {
 
     @Listener
     public void onDropItem(DropItemEvent.Destruct event) throws SQLException, IOException {
-        Text msgDied;
         Text noGrave = Text.of(TextColors.DARK_RED, "Могила не образовалась по какой-то причине." + "\n"
                 + "Ты можешь её восстановить командой /grave repair [# могилы]");
         
@@ -144,11 +144,16 @@ public class EventDropItem {
                         Text line2 = Text.of(TextColors.DARK_GREEN, "#" + lastGrave);
                         dataofsign.setLines(tile, line0, line1, line2, null);
 
-                        msgDied = Text.of(TextColors.DARK_GREEN, "Your grave is in " + world.getName() + " | "
-                                + locSignNew.getBlockX() + " | "
-                                + locSignNew.getBlockY() + " | "
-                                + locSignNew.getBlockZ() + ".");
-                        player.sendMessage(msgDied);
+                        //graveLocation = "Your grave is in %s | %s | %s | %s.";
+                        String graveLocation = MsgKeys.messagesMap.get(MsgKeys.graveLocationKey);                       
+                        Text graveLocationText = Text.of(TextColors.DARK_GREEN, String.format(
+                                graveLocation, 
+                                world.getName(), 
+                                locSignNew.getBlockX(), 
+                                locSignNew.getBlockY(), 
+                                locSignNew.getBlockZ()));
+                                    
+                        player.sendMessage(graveLocationText);
                     } else {
                         player.sendMessage(noGrave);
                     }
