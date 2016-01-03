@@ -190,7 +190,7 @@ public class Grave {
                 game.getCommandManager().register(this, jsonCommand, "json");*/
         
         CommandSpec graveHelpCommand = CommandSpec.builder()
-                .description(Text.of("help command"))
+                .description(Text.of("Help command"))
                 .permission("grave.help")
                 .executor(new GraveHelpCmd())
                 .build();

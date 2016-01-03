@@ -44,8 +44,8 @@ public class LocaleCmd implements CommandExecutor {
             Player player = (Player) src;
             player.sendMessage(Text.of("Locale: " + player.getLocale().toString()));
             
-            //Text nyaMilana = Text.builder("Nya, Milana-tyan").color(TextColors.AQUA).style(TextStyles.ITALIC).build().toText();
-            
+            Text nyaMilana = Text.builder("Nya, " + player.getName()).color(TextColors.AQUA).style(TextStyles.ITALIC).build().toText();
+            player.sendMessage(nyaMilana);
         } else if (src instanceof ConsoleSource) {
             src.sendMessage(Text.of(TextColors.DARK_RED, "Error! ", TextColors.RED, "Must be an in-game player to use /grave show!"));
         } else if (src instanceof CommandBlockSource) {

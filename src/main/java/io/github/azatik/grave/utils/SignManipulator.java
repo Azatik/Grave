@@ -39,7 +39,7 @@ public class SignManipulator {
         //List<Text> textSignLines = signdata.getValue(Keys.SIGN_LINES).get().getAll();
         List<Text> textSignLines = signdata.lines().get();
         
-        ArrayList<String> stringSignLines = new ArrayList();
+        ArrayList<String> stringSignLines = new ArrayList<>();
         stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(0)));
         stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(1)));
         stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(2)));
@@ -52,7 +52,7 @@ public class SignManipulator {
         //List<Text> textSignLines = signdata.getValue(Keys.SIGN_LINES).get().getAll();
         List<Text> textSignLines = signdata.lines().get();
         
-        ArrayList<String> stringSignLines = new ArrayList();
+        ArrayList<String> stringSignLines = new ArrayList<>();
         stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(0)));
         stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(1)));
         stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(2)));
@@ -65,7 +65,7 @@ public class SignManipulator {
         //List<Text> textSignLines = signdata.getValue(Keys.SIGN_LINES).get().getAll();      
         List<Text> textSignLines = signdata.lines().get();
 
-        ArrayList<String> stringSignLines = new ArrayList();
+        ArrayList<String> stringSignLines = new ArrayList<>();
         stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(0)));
         stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(1)));
         stringSignLines.add(TextSerializers.PLAIN.serialize(textSignLines.get(2)));

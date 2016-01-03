@@ -66,7 +66,7 @@ public class TestCmd implements CommandExecutor {
             SignManipulator dataofsign = new SignManipulator();
             
             location.setBlockType(BlockTypes.STANDING_SIGN);
-            TileEntity tile = (TileEntity) location.getTileEntity().get();
+            TileEntity tile = location.getTileEntity().get();
             Text line0 = Text.of(TextColors.DARK_RED, "[grave]");
             dataofsign.setLines(tile, line0, null, null, null);
         } else if (src instanceof ConsoleSource) {

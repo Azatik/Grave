@@ -67,8 +67,8 @@ public class EventDropItem {
         
         SignManipulator dataofsign = new SignManipulator();
         List<Entity> entities = event.getEntities();
-        ArrayList<DataContainer> itemContainers = new ArrayList();
-        ArrayList<String> itemSerializedContainers = new ArrayList();
+        ArrayList<DataContainer> itemContainers = new ArrayList<>();
+        ArrayList<String> itemSerializedContainers = new ArrayList<>();
 
         boolean causeOut = false;
         if (causeOut) {
@@ -89,12 +89,12 @@ public class EventDropItem {
                     Player player = event.getCause().first(Player.class).get();
                     World world = player.getWorld();
                     
-                    Location LocSign = player.getLocation();
+                    Location<World> LocSign = player.getLocation();
                     
                     //Here is the logic of setting the grave.
                     LogicClass newGrave = LogicSetGrave.setGrave(LocSign, world);
                               
-                    Location locSignNew = newGrave.getLoc();                   
+                    Location<World> locSignNew = newGrave.getLoc();                   
                     BlockType blockType = newGrave.getBlockTypeSet();
                     
                     entities.stream().forEach((Entity entity) -> {
@@ -132,13 +132,17 @@ public class EventDropItem {
 
                     itemSerializedContainers.stream().forEach((String Isc) -> {
                         String executeInItems = "insert into items (item, grave_id) values ('" + Isc + "', " + lastGrave + ");";
-                        DataBase.execute(executeInItems);
+                        try {
+                            DataBase.execute(executeInItems);
+                        } catch (SQLException ex) {
+                            Logger.getLogger(EventDropItem.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     });
 
                     if (blockType != null){
                         locSignNew.setBlock(blockType.getDefaultState().with(Keys.DIRECTION, SOUTH).get());
 
-                        TileEntity tile = (TileEntity) locSignNew.getTileEntity().get();
+                        TileEntity tile = locSignNew.getTileEntity().get();
                         Text line0 = Text.of(TextColors.DARK_RED, "[grave]");
                         Text line1 = Text.of(player.getName());
                         Text line2 = Text.of(TextColors.DARK_GREEN, "#" + lastGrave);

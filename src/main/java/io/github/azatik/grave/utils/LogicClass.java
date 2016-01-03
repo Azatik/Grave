@@ -26,16 +26,17 @@ package io.github.azatik.grave.utils;
 
 import org.spongepowered.api.block.BlockType;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public class LogicClass {
-    private Location location;
+    private Location<World> location;
     private BlockType blockTypeSet;
     
-    public Location getLoc(){
+    public Location<World> getLoc(){
         return location;
     }
     
-    public void setLoc(Location location){
+    public void setLoc(Location<World> location){
         this.location = location;
     }
     

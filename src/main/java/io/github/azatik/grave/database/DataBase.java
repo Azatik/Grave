@@ -53,6 +53,7 @@ import org.spongepowered.api.service.sql.SqlService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public class DataBase {
 
@@ -92,18 +93,14 @@ public class DataBase {
         }
     }
 
-    public static void execute(String query) {
-        try {
-
-            try (Connection connection = datasource.getConnection(); Statement statement = connection.createStatement()) {
-                statement.execute(query);
-                statement.close();
-                connection.close();
-            }
-        } catch (SQLException e) {
-        }
+    public static void execute(String query) throws SQLException {
+        Connection connection = datasource.getConnection(); 
+        Statement statement = connection.createStatement();
+        statement.execute(query);
+        statement.close();
+        connection.close();
     }
-
+    
     public static int getLastGrave(int playerId) throws SQLException {
         Connection connection = datasource.getConnection();
         Statement statement = connection.createStatement();
@@ -128,7 +125,7 @@ public class DataBase {
         Statement statement = connection.createStatement();
         String executeGetPlayers = "select * from players";
         ResultSet rsGetPlayers = statement.executeQuery(executeGetPlayers);
-        ArrayList<String> namesPlayers = new ArrayList();
+        ArrayList<String> namesPlayers = new ArrayList<>();
         String elementPlayerName;
         String playerName = player.getName().toLowerCase();
 
@@ -157,14 +154,14 @@ public class DataBase {
 
     static int counterError = 0;
 
-    public static void materializeItems(int graveNumber, Location location, Player player) throws SQLException, IOException {
+    public static void materializeItems(int graveNumber, Location<World> location, Player player) throws SQLException, IOException {
         Connection connection = datasource.getConnection();
         Statement statement = connection.createStatement();
         String executeGetGrave = "select item from items where grave_id = " + graveNumber;
         ResultSet rs = statement.executeQuery(executeGetGrave);
         Game game = Grave.getInstance().getGame();
 
-        ArrayList<DataView> viewsList = new ArrayList();
+        ArrayList<DataView> viewsList = new ArrayList<>();
         while (rs.next()) {
             StringReader reader = new StringReader(rs.getString("item"));
             DataView view = (ConfigurateTranslator.instance().translateFrom(HoconConfigurationLoader.builder().setSource(() -> new BufferedReader(reader)).build().load()));
@@ -202,7 +199,7 @@ public class DataBase {
         Statement statement = connection.createStatement();
 
         String executeGetPlayers = "select * from players";
-        ArrayList<String> namesPlayers = new ArrayList();
+        ArrayList<String> namesPlayers = new ArrayList<>();
         String elementPlayerName;
 
         ResultSet rsGetPlayers = statement.executeQuery(executeGetPlayers);
@@ -211,7 +208,7 @@ public class DataBase {
             namesPlayers.add(elementPlayerName);
         }
 
-        ArrayList<Text> graves = new ArrayList();
+        ArrayList<Text> graves = new ArrayList<>();
         if (namesPlayers.contains(player)) {
             String executeGetUUID = "SELECT UUID from players where name = '" + player + "'";
             ResultSet rsGetUUID = statement.executeQuery(executeGetUUID);
@@ -220,7 +217,7 @@ public class DataBase {
             rsGetUUID.close();
 
             String executeGetPlayerIds = "select id from players where UUID = '" + strUUID + "'";
-            ArrayList<String> playerIds = new ArrayList();
+            ArrayList<String> playerIds = new ArrayList<>();
             ResultSet rsGetPlayerIds = statement.executeQuery(executeGetPlayerIds);
             while (rsGetPlayerIds.next()) {
                 String playerId = rsGetPlayerIds.getString("id");

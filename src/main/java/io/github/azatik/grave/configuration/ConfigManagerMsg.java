@@ -26,8 +26,6 @@ package io.github.azatik.grave.configuration;
 
 import io.github.azatik.grave.Grave;
 import io.github.azatik.grave.messages.MsgKeys;
-import static io.github.azatik.grave.messages.MsgKeys.graveLocationKey;
-import static io.github.azatik.grave.messages.MsgKeys.messagesMap;
 import java.io.File;
 import java.io.IOException;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
@@ -101,9 +99,4 @@ public class ConfigManagerMsg {
             Grave.getInstance().getLogger().error("Failed to load config");
         }
     }
-
-    public void loadMessages() {
-        messagesMap.put(graveLocationKey, config.getNode(graveLocationKey).getString());
-    }
-
 }

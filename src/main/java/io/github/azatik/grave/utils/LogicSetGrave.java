@@ -32,7 +32,7 @@ import org.spongepowered.api.world.World;
 
 public class LogicSetGrave {
 
-    public static LogicClass setGrave(Location location, World world) {
+    public static LogicClass setGrave(Location<World> location, World world) {
         LogicClass loc = new LogicClass();
 
         int locationY = location.getBlockY();
@@ -41,14 +41,14 @@ public class LogicSetGrave {
             boolean logicStart = true;
 
             if (locationY > 255) {
-                location = new Location(world, location.getBlockX(), 255, location.getBlockZ());
+                location = new Location<>(world, location.getBlockX(), 255, location.getBlockZ());
                 if (!location.getBlockType().equals(BlockTypes.AIR)) {
                     logicStart = false;
                 }
             }
 
             if (logicStart) {
-                Location locationSurface = new Location(world, location.getBlockX(), location.getBlockY() - 1, location.getBlockZ());
+                Location<World> locationSurface = new Location<>(world, location.getBlockX(), location.getBlockY() - 1, location.getBlockZ());
 
                 if (!conditionFly(locationSurface)) {
                     loc.setLoc(location);
@@ -66,7 +66,7 @@ public class LogicSetGrave {
                     boolean aboveVoid = false;
                     while (conditionFly(locationSurface)) {
                         y--;
-                        locationSurface = new Location(world, location.getBlockX(), y, location.getBlockZ());
+                        locationSurface = new Location<>(world, location.getBlockX(), y, location.getBlockZ());
                         
                         if (y <= 0){
                             aboveVoid = true;
@@ -76,7 +76,7 @@ public class LogicSetGrave {
                     if (!aboveVoid) {
 
                         boolean surfaceLiquid = BlockIsLiquid(locationSurface);
-                        locationSurface = new Location(world, location.getBlockX(), y + 1, location.getBlockZ());
+                        locationSurface = new Location<>(world, location.getBlockX(), y + 1, location.getBlockZ());
                         loc.setLoc(locationSurface);
                         if (surfaceLiquid) {
                             loc.setBlockTypeSet(BlockTypes.WALL_SIGN);
@@ -100,7 +100,7 @@ public class LogicSetGrave {
         return loc;
     }
 
-    private static boolean conditionFly(Location location) {
+    private static boolean conditionFly(Location<World> location) {
         return (location.getBlockType().equals(BlockTypes.AIR)) || (BlockIsGas(location));
     }
 }

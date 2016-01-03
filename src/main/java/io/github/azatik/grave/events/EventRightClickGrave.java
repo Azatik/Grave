@@ -37,16 +37,17 @@ import org.spongepowered.api.event.block.InteractBlockEvent;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.world.Location;
+import org.spongepowered.api.world.World;
 
 public class EventRightClickGrave {
 
     @Listener
     public void onPlayerInteractSign(InteractBlockEvent.Secondary event) throws SQLException, IOException {
         if (event.getCause().first(Player.class).isPresent()) {
-            Player player = (Player) event.getCause().first(Player.class).get();
+            Player player = event.getCause().first(Player.class).get();
             if (event.getTargetBlock().getState().getType().equals(BlockTypes.WALL_SIGN)) {
-                Location location = event.getTargetBlock().getLocation().get();
-                TileEntity tileEntity = (TileEntity) location.getTileEntity().get();
+                Location<World> location = event.getTargetBlock().getLocation().get();
+                TileEntity tileEntity = location.getTileEntity().get();
                 SignManipulator dataofsign = new SignManipulator();
                 ArrayList<String> signLines = dataofsign.getLines(tileEntity);
 
