@@ -25,6 +25,7 @@
 package io.github.azatik.grave.commands;
 
 import io.github.azatik.grave.Grave;
+import io.github.azatik.grave.messages.MsgKeys;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
@@ -42,7 +43,7 @@ public class GraveCmd implements CommandExecutor {
                 TextColors.GREEN, " version: ", TextColors.DARK_GREEN,
                 Grave.PLUGIN_VERSION, TextColors.GREEN, " by ",
                 TextColors.DARK_GREEN, "Azatik"));        
-        src.sendMessage(Text.of(TextColors.DARK_GREEN, "Для помощи напиши /grave help"));
+        src.sendMessage(Text.of(TextColors.DARK_GREEN, MsgKeys.messagesMap.get(MsgKeys.helpMsgInGraveCmdKey)));
         
         return CommandResult.success();
     }

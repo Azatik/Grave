@@ -32,11 +32,13 @@ import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 public class MsgKeys {
 
     public static final String graveLocationKey = "graveLocation";
-    public static Map<String, String> messagesMap = new HashMap<String, String>();
+    public static final String helpMsgInGraveCmdKey = "helpMsgInGraveCmd";
+    public static Map<String, String> messagesMap = new HashMap<>();
 
     public MsgKeys() {
         ConfigManagerMsg fileMsg = new ConfigManagerMsg();
         CommentedConfigurationNode config = fileMsg.getConfig();
         messagesMap.put(graveLocationKey, config.getNode("Grave", graveLocationKey).getString());
+        messagesMap.put(helpMsgInGraveCmdKey, config.getNode("Grave", helpMsgInGraveCmdKey).getString());
     }
 }

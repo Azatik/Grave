@@ -72,8 +72,8 @@ public class ConfigManagerMsg {
             if (config.getNode("Grave", MsgKeys.graveLocationKey).getString() == null) {
                 config.getNode("Grave", MsgKeys.graveLocationKey).setValue("Your grave is in %s | %s | %s | %s.");
             }
-            if (config.getNode("Grave", "Love").getString() == null) {
-                config.getNode("Grave", "Love").setValue("My love = X").setComment("Just Second Test Message");
+            if (config.getNode("Grave", MsgKeys.helpMsgInGraveCmdKey).getString() == null) {
+                config.getNode("Grave", MsgKeys.helpMsgInGraveCmdKey).setValue("For help enter /grave help");
             }
         }
 
