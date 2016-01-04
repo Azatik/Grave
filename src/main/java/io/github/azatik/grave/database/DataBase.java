@@ -25,6 +25,7 @@
 package io.github.azatik.grave.database;
 
 import io.github.azatik.grave.Grave;
+import io.github.azatik.grave.configuration.ConfigManagerConfig;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -38,6 +39,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import javax.sql.DataSource;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.data.DataView;
@@ -62,15 +64,24 @@ public class DataBase {
 
     public static void setup(Game game) throws SQLException {
         sql = game.getServiceManager().provide(SqlService.class).get();
-
-        String host = "localhost";
-        String port = "3306";
-        String username = "root";
-        String password = "";
-        String database = "plgrave";
-
-        datasource = sql.getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
-        //datasource = sql.getDataSource("jdbc:h2:file:./mods/grave/grave");
+        
+        ConfigManagerConfig fileConfig = new ConfigManagerConfig();
+        CommentedConfigurationNode config = fileConfig.getConfig();
+        
+        if (config.getNode("Grave", "Database", "UseDatabase").getString().equals("H2")){
+            datasource = sql.getDataSource("jdbc:h2:file:./mods/grave/grave");
+        } else {
+            if (config.getNode("Grave", "Database", "UseDatabase").getString().equals("MySQL")) {
+                String host = config.getNode("Grave", "Database", "MySQL", "host").getString();
+                String port = config.getNode("Grave", "Database", "MySQL", "port").getString();
+                String username = config.getNode("Grave", "Database", "MySQL", "username").getString();
+                String password = config.getNode("Grave", "Database", "MySQL", "password").getString();
+                String database = config.getNode("Grave", "Database", "MySQL", "database").getString();
+                datasource = sql.getDataSource("jdbc:mysql://" + host + ":" + port + "/" + database + "?user=" + username + "&password=" + password);
+            } else {
+                datasource = sql.getDataSource("jdbc:h2:file:./mods/grave/grave");
+            }
+        }
 
         DatabaseMetaData metadata = datasource.getConnection().getMetaData();
         ResultSet resultset = metadata.getTables(null, null, "%", null);
@@ -254,3 +265,11 @@ public class DataBase {
         return graves;
     }
 }
+
+/*
+        String host = "localhost";
+        String port = "3306";
+        String username = "root";
+        String password = "";
+        String database = "plgrave";
+*/

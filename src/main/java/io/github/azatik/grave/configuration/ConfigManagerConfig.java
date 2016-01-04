@@ -66,12 +66,25 @@ public class ConfigManagerConfig {
     
     private void initConfig() {
         if (file.getName().equalsIgnoreCase("config.conf")) {
-            if (config.getNode("Grave", "Message").getString() == null) {
-                config.getNode("Grave", "Message").setValue("New Year 2016!").setComment("Just Test Message");
+            if (config.getNode("Grave", "Database", "UseDatabase").getString() == null) {
+                config.getNode("Grave", "Database", "UseDatabase").setValue("H2").setComment("H2 or MySQL");
             }
-            if (config.getNode("Grave", "Love").getString() == null) {
-                config.getNode("Grave", "Love").setValue("My love = X").setComment("Just Second Test Message");
+            if (config.getNode("Grave", "Database", "MySQL", "host").getString() == null) {
+                config.getNode("Grave", "Database", "MySQL", "host").setValue("localhost");
             }
+            if (config.getNode("Grave", "Database", "MySQL", "port").getString() == null) {
+                config.getNode("Grave", "Database", "MySQL", "port").setValue("3306");
+            }
+            if (config.getNode("Grave", "Database", "MySQL", "username").getString() == null) {
+                config.getNode("Grave", "Database", "MySQL", "username").setValue("root");
+            }
+            if (config.getNode("Grave", "Database", "MySQL", "password").getString() == null) {
+                config.getNode("Grave", "Database", "MySQL", "password").setValue("");
+            }
+            if (config.getNode("Grave", "Database", "MySQL", "database").getString() == null) {
+                config.getNode("Grave", "Database", "MySQL", "database").setValue("plgrave");
+            }
+            
         }
         save();
     }
