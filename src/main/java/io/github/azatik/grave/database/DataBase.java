@@ -265,11 +265,3 @@ public class DataBase {
         return graves;
     }
 }
-
-/*
-        String host = "localhost";
-        String port = "3306";
-        String username = "root";
-        String password = "";
-        String database = "plgrave";
-*/

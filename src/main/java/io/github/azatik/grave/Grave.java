@@ -25,6 +25,7 @@
 package io.github.azatik.grave;
 
 import io.github.azatik.grave.commands.ConfigCmd;
+import io.github.azatik.grave.commands.GraveCheckCmd;
 import io.github.azatik.grave.commands.GraveCmd;
 import io.github.azatik.grave.commands.GraveHelpCmd;
 import io.github.azatik.grave.commands.GraveShowCmd;
@@ -201,12 +202,19 @@ public class Grave {
                 .arguments(GenericArguments.optional(GenericArguments.string(Text.of("player"))))
                 .executor(new GraveShowCmd()).build();
         
+        CommandSpec graveCheckCommand = CommandSpec.builder()
+                .description(Text.of("This command checking graves"))
+                .permission("grave.check")
+                .arguments(GenericArguments.optional(GenericArguments.integer(Text.of("number"))))
+                .executor(new GraveCheckCmd()).build();
+        
         CommandSpec graveCommand = CommandSpec.builder()
                 .description(Text.of("essentials command"))
                 .permission("grave.command")
                 .executor(new GraveCmd())
                 .child(graveHelpCommand, "help")
                 .child(graveShowCommand, "show")
+                .child(graveCheckCommand, "check")
                 .build();
         game.getCommandManager().register(this, graveCommand, "grave");
         

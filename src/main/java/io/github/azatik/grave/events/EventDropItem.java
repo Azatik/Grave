@@ -148,7 +148,6 @@ public class EventDropItem {
                         Text line2 = Text.of(TextColors.DARK_GREEN, "#" + lastGrave);
                         dataofsign.setLines(tile, line0, line1, line2, null);
 
-                        //graveLocation = "Your grave is in %s | %s | %s | %s.";
                         String graveLocation = MsgKeys.messagesMap.get(MsgKeys.graveLocationKey);                       
                         Text graveLocationText = Text.of(TextColors.DARK_GREEN, String.format(
                                 graveLocation, 
