@@ -63,7 +63,7 @@ public class EventDropItem {
     @Listener
     public void onDropItem(DropItemEvent.Destruct event) throws SQLException, IOException {
         Text noGrave = Text.of(TextColors.DARK_RED, "Могила не образовалась по какой-то причине." + "\n"
-                + "Ты можешь её восстановить командой /grave repair [# могилы]");
+                + "Ты можешь её получить командой /grave get [# могилы]");
         
         SignManipulator dataofsign = new SignManipulator();
         List<Entity> entities = event.getEntities();

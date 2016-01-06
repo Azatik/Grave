@@ -24,14 +24,11 @@
  */
 package io.github.azatik.grave;
 
-import io.github.azatik.grave.commands.ConfigCmd;
 import io.github.azatik.grave.commands.GraveCheckCmd;
 import io.github.azatik.grave.commands.GraveCmd;
 import io.github.azatik.grave.commands.GraveGetCmd;
 import io.github.azatik.grave.commands.GraveHelpCmd;
 import io.github.azatik.grave.commands.GraveShowCmd;
-import io.github.azatik.grave.commands.LocaleCmd;
-import io.github.azatik.grave.commands.TestCmd;
 import io.github.azatik.grave.configuration.ConfigManagerConfig;
 import io.github.azatik.grave.configuration.ConfigManagerMsg;
 import org.spongepowered.api.plugin.Plugin;
@@ -162,26 +159,5 @@ public class Grave {
                 .child(graveGetCommand, "get")
                 .build();
         game.getCommandManager().register(this, graveCommand, "grave");
-        
-        CommandSpec testCommand = CommandSpec.builder()
-                .description(Text.of("test command"))
-                .permission("test.command")
-                .executor(new TestCmd())
-                .build();
-        game.getCommandManager().register(this, testCommand, "test");
-        
-        CommandSpec configCommand = CommandSpec.builder()
-                .description(Text.of("config command"))
-                .permission("config.command")
-                .executor(new ConfigCmd())
-                .build();
-        game.getCommandManager().register(this, configCommand, "config");
-        
-        CommandSpec localeCommand = CommandSpec.builder()
-                .description(Text.of("locale command"))
-                .permission("locale.command")
-                .executor(new LocaleCmd())
-                .build();
-        game.getCommandManager().register(this, localeCommand, "locale");
     }
 }
