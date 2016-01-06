@@ -27,6 +27,7 @@ package io.github.azatik.grave;
 import io.github.azatik.grave.commands.ConfigCmd;
 import io.github.azatik.grave.commands.GraveCheckCmd;
 import io.github.azatik.grave.commands.GraveCmd;
+import io.github.azatik.grave.commands.GraveGetCmd;
 import io.github.azatik.grave.commands.GraveHelpCmd;
 import io.github.azatik.grave.commands.GraveShowCmd;
 import io.github.azatik.grave.commands.LocaleCmd;
@@ -79,7 +80,6 @@ public class Grave {
     
     @Listener
     public void gamePreInit(GamePreInitializationEvent event) {
-        logger.info("Grave PreLoading");
         instance = this;
     }
     
@@ -128,68 +128,6 @@ public class Grave {
     }
     
     private void registerCommands() {
-        /*//Command grave show (children Grave)
-        CommandSpec graveShow = CommandSpec.builder()
-                .description(Texts.of("This command show your graves"))
-                .permission("grave.show")
-                .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("Player"))))
-                .executor(new GraveShowCmd()).build();
-        
-        //Command grave item (children Grave)
-        CommandSpec graveItem = CommandSpec.builder()
-                .description(Texts.of("This command for drop item (test command)"))
-                .permission("grave.item")
-                .arguments(GenericArguments.string(Texts.of("file")))
-                .executor(new GraveItemCmd()).build();
-        
-        //Command grave set (children Grave)
-        CommandSpec graveSetBlock = CommandSpec.builder()
-                .description(Texts.of("This command for test SetBlock (test command)"))
-                .permission("grave.setblock")
-                .executor(new GraveSetBlockCmd()).build();
-        
-                //Command grave test (children Grave)
-        CommandSpec graveTest = CommandSpec.builder()
-                .description(Texts.of("This command for test SetBlock (test command)"))
-                .permission("grave.test")
-                .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("db"))),
-                        GenericArguments.onlyOne(GenericArguments.string(Texts.of("item"))))
-                .executor(new GraveTestCmd()).build();
-        
-        CommandSpec graveGetOne = CommandSpec.builder()
-                .description(Texts.of("Get one item from items table"))
-                .permission("grave.show")
-                .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("Number"))))
-                .executor(new GraveGetCmdOne()).build();
-        
-        CommandSpec graveGet = CommandSpec.builder()
-                .description(Texts.of("Get items from grave"))
-                .permission("grave.get")
-                .arguments(GenericArguments.optional(GenericArguments.string(Texts.of("Number"))))
-                .executor(new GraveGetCmd()).build();
-        
-        //Command grave (parent)
-        CommandSpec graveCommand = CommandSpec.builder()
-                .description(Texts.of("/grave [show|soon|soon]"))
-                .permission("grave")
-                .executor(new GraveCmd())
-                .child(graveShow, "show")
-                .child(graveItem, "item")
-                .child(graveSetBlock, "set")
-                .child(graveTest, "test")
-                .child(graveGetOne, "getone")
-                .child(graveGet, "get")
-                .build();
-                game.getCommandManager().register(this, graveCommand, "grave");
-                
-        //Command json (parent)
-        CommandSpec jsonCommand = CommandSpec.builder()
-                .description(Texts.of("Json hither and thither."))
-                .permission("json")
-                .executor(new JsonCmd())
-                .build();
-                game.getCommandManager().register(this, jsonCommand, "json");*/
-        
         CommandSpec graveHelpCommand = CommandSpec.builder()
                 .description(Text.of("Help command"))
                 .permission("grave.help")
@@ -208,6 +146,12 @@ public class Grave {
                 .arguments(GenericArguments.optional(GenericArguments.integer(Text.of("number"))))
                 .executor(new GraveCheckCmd()).build();
         
+        CommandSpec graveGetCommand = CommandSpec.builder()
+                .description(Text.of("This command gives you the grave"))
+                .permission("grave.get")
+                .arguments(GenericArguments.optional(GenericArguments.integer(Text.of("number"))))
+                .executor(new GraveGetCmd()).build();
+        
         CommandSpec graveCommand = CommandSpec.builder()
                 .description(Text.of("essentials command"))
                 .permission("grave.command")
@@ -215,6 +159,7 @@ public class Grave {
                 .child(graveHelpCommand, "help")
                 .child(graveShowCommand, "show")
                 .child(graveCheckCommand, "check")
+                .child(graveGetCommand, "get")
                 .build();
         game.getCommandManager().register(this, graveCommand, "grave");
         

@@ -67,15 +67,19 @@ public class EventBreakGrave {
 
                     if (signLines.get(0).equals("[grave]")) {
                         if (signLines.get(2).contains("#")) {                           
-                            int IDGrave = Integer.parseInt(signLines.get(2).replace("#", ""));
                             try {
+                                int IDGrave = Integer.parseInt(signLines.get(2).replace("#", ""));
                                 DataBase.materializeItems(IDGrave, trans.getOriginal().getLocation().get(), player);
-                            } catch (SQLException | IOException ex) {
+                                Text msgID = Text.of(TextColors.GRAY, "Materialize grave #" + IDGrave);
+                                player.sendMessages(msgID);
+                                event.setCancelled(false);
+                            } catch (SQLException ex) {
                                 Logger.getLogger(EventBreakGrave.class.getName()).log(Level.SEVERE, null, ex);
+                                player.sendMessage(Text.of(TextColors.RED, "Ошибка базы данных!!!"));
+                            } catch (IOException ex) {
+                                Logger.getLogger(EventBreakGrave.class.getName()).log(Level.SEVERE, null, ex);
+                                player.sendMessage(Text.of(TextColors.RED, "Данные о могиле повреждены!!!"));
                             }
-                            Text msgID = Text.of(TextColors.GRAY, "Materialize grave #" + IDGrave);
-                            player.sendMessages(msgID);
-                            event.setCancelled(false);
                         }
                     }
                 }

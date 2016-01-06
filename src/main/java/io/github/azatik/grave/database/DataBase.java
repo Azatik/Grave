@@ -38,6 +38,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sql.DataSource;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
@@ -166,42 +168,64 @@ public class DataBase {
     static int counterError = 0;
 
     public static void materializeItems(int graveNumber, Location<World> location, Player player) throws SQLException, IOException {
+
         Connection connection = datasource.getConnection();
         Statement statement = connection.createStatement();
-        String executeGetGrave = "select item from items where grave_id = " + graveNumber;
-        ResultSet rs = statement.executeQuery(executeGetGrave);
+
+        String executeCheckGrave = "select id from graves";
+        ResultSet rsCheckGrave = statement.executeQuery(executeCheckGrave);
+        ArrayList<Integer> graveIDs = new ArrayList<>();
+        while (rsCheckGrave.next()) {
+            graveIDs.add(rsCheckGrave.getInt("id"));
+        }
+        rsCheckGrave.close();
+        if (graveIDs.contains(graveNumber)) {
+
+        String executeGetItems = "select item from items where grave_id = " + graveNumber;
+        ResultSet rsGetItems = statement.executeQuery(executeGetItems);
         Game game = Grave.getInstance().getGame();
-
-        ArrayList<DataView> viewsList = new ArrayList<>();
-        while (rs.next()) {
-            StringReader reader = new StringReader(rs.getString("item"));
-            DataView view = (ConfigurateTranslator.instance().translateFrom(HoconConfigurationLoader.builder().setSource(() -> new BufferedReader(reader)).build().load()));
-            viewsList.add(view);
-        }
-
-        viewsList.stream().forEach((DataView view) -> {
-
-            try {
-                ItemStack stack = game.getRegistry().createBuilder(ItemStack.Builder.class).fromContainer(view).build();
-
-                Optional<Entity> optItem = location.getExtent().createEntity(EntityTypes.ITEM, location.getPosition());
-                if (optItem.isPresent()) {
-                    Item item = (Item) optItem.get();
-                    item.offer(Keys.REPRESENTED_ITEM, stack.createSnapshot());
-                    player.getWorld().spawnEntity(item, Cause.of(player));
-                }
-            } catch (NoSuchElementException e) {
-                counterError++;
+ 
+            ArrayList<DataView> viewsList = new ArrayList<>();
+            while (rsGetItems.next()) {
+                StringReader reader = new StringReader(rsGetItems.getString("item"));
+                DataView view = (ConfigurateTranslator.instance().translateFrom(HoconConfigurationLoader.builder().setSource(() -> new BufferedReader(reader)).build().load()));
+                viewsList.add(view);
             }
-        });
-        if (counterError != 0) {
-            player.sendMessages(Text.of(TextColors.RED, "Не образовалось " + counterError + " предметов, так как они больше не существуют."));
-            counterError = 0;
-        }
 
-        rs.close();
-        statement.close();
-        connection.close();
+            if (!viewsList.isEmpty()) {
+                viewsList.stream().forEach((DataView view) -> {
+
+                    try {
+                        ItemStack stack = game.getRegistry().createBuilder(ItemStack.Builder.class).fromContainer(view).build();
+
+                        Optional<Entity> optItem = location.getExtent().createEntity(EntityTypes.ITEM, location.getPosition());
+                        if (optItem.isPresent()) {
+                            Item item = (Item) optItem.get();
+                            item.offer(Keys.REPRESENTED_ITEM, stack.createSnapshot());
+                            player.getWorld().spawnEntity(item, Cause.of(player));
+                        }
+                        
+                    } catch (NoSuchElementException e) {
+                        counterError++;
+                    }
+                });
+                player.sendMessages(Text.of(TextColors.GOLD, "Материализовалась могила #" + graveNumber));
+            } else {
+                player.sendMessages(Text.of(TextColors.GOLD, "У этой могилы нет предметов, возможно кто-то их удалил из Базы Данных."));
+            }
+            if (counterError != 0) {
+                player.sendMessages(Text.of(TextColors.RED, "Не образовалось " + counterError + " предметов, так как они больше не существуют."));
+                counterError = 0;
+            }
+
+            rsGetItems.close();
+            statement.close();
+            connection.close();
+        } else {
+            player.sendMessage(Text.of(TextColors.RED, "Такой могилы не существует!!!"));
+            statement.close();
+            connection.close();
+        }
     }
 
     public static ArrayList<Text> getGraves(String player) throws SQLException {
@@ -246,13 +270,13 @@ public class DataBase {
 
             String executeGrave = "SELECT graves.id, players.name, graves.world_name, graves.coord_x, graves.coord_y, graves.coord_z from players join graves on graves.player_id = players.id where " + result + "";
             ResultSet rsGraves = statement.executeQuery(executeGrave);
-            
+
             Text ElementRs;
             while (rsGraves.next()) {
                 ElementRs = Text.of(TextColors.YELLOW, "#" + rsGraves.getString("graves.id") + " | " + rsGraves.getString("players.name") + " | " + rsGraves.getString("graves.world_name") + " | " + rsGraves.getInt("graves.coord_x") + " | " + rsGraves.getInt("graves.coord_y") + " | " + rsGraves.getInt("graves.coord_z"));
                 graves.add(ElementRs);
             }
-            rsGraves.close();        
+            rsGraves.close();
         } else {
             Text errorMsg = Text.of(TextColors.RED, "Игрока " + player + " нет в базе.");
             graves.add(errorMsg);
@@ -261,7 +285,7 @@ public class DataBase {
         rsGetPlayers.close();
         statement.close();
         connection.close();
-        
+
         return graves;
     }
 }
